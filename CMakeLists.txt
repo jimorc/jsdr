@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.14...3.28)
 project(jSDR VERSION 0.1
         LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 11)
+
 include(FetchContent)
 
 FetchContent_Declare(
     wxwidgets
     GIT_REPOSITORY  https://github.com/wxWidgets/wxWidgets.git
-    GIT_TAG         master
+    GIT_TAG         origin/master
 )
 
 if(NOT wxwidgets_POPULATED)
@@ -22,4 +24,6 @@ if(NOT wxwidgets_POPULATED)
     set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD})
 endif()
 
+set(CMAKE_CXX_STANDARD 20)
 add_executable(test main.cpp)
+target_link_libraries(test PRIVATE wx::core wx::base)
