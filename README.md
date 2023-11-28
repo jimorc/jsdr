@@ -4,10 +4,20 @@ A Software Defined Radio receiver
 
 ## Status
 
-This project is currently being developed on an M1 MacOS computer. The intent is to port it to both Windows and Linux once it 
+This project is currently being developed on an M1 MacOS computer. The intent is
+to port it to both Windows and Linux once it
 has become at least minimally usable.
 
 **Be forewarned!**
 
-This project is very much in its beginning stages. There is essentially no usable functionality provided at this point
-in time, and given my track record with large projects, it is likely never to come to a usable state.
+This project is very much in its beginning stages. There is essentially no
+usable functionality provided at this point
+in time, and given my track record with large projects, it is likely never to
+come to a usable state.
+
+## How to Build
+
+Because it is intended that this project be built on MacOS, Windows, and Linux,
+and because it uses a potentially large number of open source libraries, the
+build instructions can be quite extensive. For that reason, the build
+instructions are kept in a separate document: [Building jSDR](Building_jSDR.md)
