@@ -1,9 +1,11 @@
 #include <wx/wx.h>
-#include <json/json.h>
+
+#include "jSDRConfig.h"
 
 class jSDRApp : public wxApp {
 public:
     bool OnInit() override;
+    jSDRConfig& Config() { return m_config; }
 private:
-    Json::Value m_root;
+    jSDRConfig m_config;
 };

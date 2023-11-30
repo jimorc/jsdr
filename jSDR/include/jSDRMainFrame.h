@@ -2,5 +2,5 @@
 
 class jSDRMainFrame : public wxFrame {
 public:
-    jSDRMainFrame();
+    jSDRMainFrame(const wxPoint upperLeft, const wxSize size);
 };

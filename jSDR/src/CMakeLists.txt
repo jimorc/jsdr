@@ -23,6 +23,7 @@ add_executable(
     jSDR
     jSDRApp.cpp
     jSDRMainFrame.cpp
+    jSDRConfig.cpp
 )
 
 target_include_directories(

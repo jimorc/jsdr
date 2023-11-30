@@ -4,7 +4,10 @@
 wxIMPLEMENT_APP(jSDRApp);
 
 bool jSDRApp::OnInit() {
-    jSDRMainFrame *frame = new jSDRMainFrame();
+    auto displayProperties = m_config.getDisplayProperties();
+    jSDRMainFrame *frame = new jSDRMainFrame(
+        displayProperties->mainFramePosition,
+        displayProperties->mainFrameSize);
     frame->Show();
     return true;
 }
