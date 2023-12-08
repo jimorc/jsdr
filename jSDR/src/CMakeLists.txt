@@ -5,13 +5,17 @@
 
 set(CMAKE_CXX_FLAGS -Wall)
 
+set(SOURCES jSDRApp.cpp jSDRMainFrame.cpp jSDRConfig.cpp)
 
 add_executable(
     jSDR
-    jSDRApp.cpp
-    jSDRMainFrame.cpp
-    jSDRConfig.cpp
+    ${SOURCES}
 )
+
+include(Format)
+Format(jSDR .)
+Format(jSDR ./../include)
+
 
 target_include_directories(
     jSDR

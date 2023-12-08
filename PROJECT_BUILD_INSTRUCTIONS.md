@@ -22,6 +22,7 @@ brew update
 brew upgrade
 brew install git cmake ninja
 brew install wxWidgets
+brew install clang-format
 
 ```
 
