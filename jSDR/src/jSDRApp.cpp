@@ -2,12 +2,16 @@
 
 #include "jSDRMainFrame.h"
 
-wxIMPLEMENT_APP(jSDRApp);
+wxIMPLEMENT_APP(jsdr::jSDRApp);
 
-bool jSDRApp::OnInit() {
-   auto           displayProperties = m_config.getDisplayProperties();
-   jSDRMainFrame* frame =
-       new jSDRMainFrame(displayProperties->mainFramePosition, displayProperties->mainFrameSize);
-   frame->Show();
-   return true;
-}
+namespace jsdr {
+
+   bool jSDRApp::OnInit() {
+      auto           displayProperties = m_config.getDisplayProperties();
+      jSDRMainFrame* frame             =   // NOLINT
+          new jSDRMainFrame(displayProperties->mainFramePosition,
+                            displayProperties->mainFrameSize);   // NOLINT
+      frame->Show();
+      return true;
+   }
+}   // namespace jsdr

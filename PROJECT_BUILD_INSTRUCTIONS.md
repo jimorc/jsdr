@@ -23,6 +23,11 @@ brew upgrade
 brew install git cmake ninja
 brew install wxWidgets
 brew install clang-format
+brew install llvm
+# if Apple silicon enter the following line:
+ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/opt/homeberew/bin/clang-tidy"
+# else Intel enter the following:
+ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
 
 ```
 

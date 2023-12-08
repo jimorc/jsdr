@@ -16,6 +16,8 @@ include(Format)
 Format(jSDR .)
 Format(jSDR ./../include)
 
+include(ClangTidy)
+AddClangTidy(jSDR)
 
 target_include_directories(
     jSDR
