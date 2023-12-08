@@ -13,6 +13,10 @@ add_executable(tests
     ../src/jSDRConfig.cpp
 )
 
+include(Format)
+Format(tests .)
+
+
 target_include_directories(tests 
     PRIVATE ../include
     PRIVATE ${wxWidgets_INCLUDE_DIRS}
