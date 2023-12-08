@@ -4,12 +4,12 @@
 #include <fstream>
 
 jSDRConfig::jSDRConfig() {
-   std::filesystem::path cfgFile( getenv( "HOME" ) );
+   std::filesystem::path cfgFile(getenv("HOME"));
    cfgFile /= m_configFileName;
-   if ( std::filesystem::exists( cfgFile ) ) {
+   if (std::filesystem::exists(cfgFile)) {
       std::ifstream configStream;
-      configStream.imbue( std::locale() );
-      configStream.open( cfgFile );
+      configStream.imbue(std::locale());
+      configStream.open(cfgFile);
       configStream >> m_values;
       configStream.close();
    } else {
@@ -18,11 +18,11 @@ jSDRConfig::jSDRConfig() {
 }
 
 jSDRConfig::~jSDRConfig() noexcept {
-   std::filesystem::path cfgFile( getenv( "HOME" ) );
+   std::filesystem::path cfgFile(getenv("HOME"));
    cfgFile /= m_configFileName;
    std::ofstream configStream;
-   configStream.imbue( std::locale() );
-   configStream.open( cfgFile );
+   configStream.imbue(std::locale());
+   configStream.open(cfgFile);
    configStream << m_values << std::endl;
    configStream.close();
 }
@@ -42,9 +42,9 @@ std::shared_ptr<jSDRConfig::DisplayProperties> jSDRConfig::getDisplayProperties(
    displayProps->displayNumber     = m_values["mainFrame"]["displayNumber"].asInt();
    int x                           = m_values["mainFrame"]["position"]["x"].asInt();
    int y                           = m_values["mainFrame"]["position"]["y"].asInt();
-   displayProps->mainFramePosition = wxPoint( x, y );
+   displayProps->mainFramePosition = wxPoint(x, y);
    int width                       = m_values["mainFrame"]["size"]["width"].asInt();
    int height                      = m_values["mainFrame"]["size"]["width"].asInt();
-   displayProps->mainFrameSize     = wxSize( width, height );
+   displayProps->mainFrameSize     = wxSize(width, height);
    return displayProps;
 }
