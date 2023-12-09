@@ -8,31 +8,31 @@ set(CMAKE_CXX_FLAGS -Wall)
 set(SOURCES jSDRApp.cpp jSDRMainFrame.cpp jSDRConfig.cpp)
 
 add_executable(
-    jSDR
+    jsdr
     ${SOURCES}
 )
 
 include(Format)
-Format(jSDR .)
-Format(jSDR ./../include)
+Format(jsdr .)
+Format(jsdr ./../include)
 
 include(ClangTidy)
-AddClangTidy(jSDR)
+AddClangTidy(jsdr)
 
 target_include_directories(
-    jSDR
+    jsdr
     PRIVATE ../include
     PRIVATE ${wxWidgets_INCLUDE_DIRS}
     PRIVATE ${jsoncpp_INCLUDE_DIR}
 )
 
 target_link_directories(
-    jSDR
+    jsdr
     PRIVATE ${jsoncpp_LIBRARIES}
 )
 
 target_link_libraries(
-    jSDR
+    jsdr
     ${wxWidgets_LIBRARIES}
     jsoncpp
 )

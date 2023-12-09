@@ -17,7 +17,7 @@ include(Format)
 Format(tests .)
 
 include(ClangTidy)
-AddClangTidy(jSDR)
+AddClangTidy(tests)
 
 target_include_directories(tests 
     PRIVATE ../include

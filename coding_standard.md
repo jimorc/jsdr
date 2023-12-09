@@ -6,16 +6,18 @@ in C++; they work for me and therefore are required for this project.
 
 > *Note:* This is the first time that I have documented my preferred coding standards. Therefore,
 this document is dynamic and is in the early stages of being written. Hence, you should expect that
-changes will be
-made to it.
-> *Note:* clang-format is used to format the source code in this project. Therefore, this document
-only covers the coding standards
-that are not handled directly by clang-format.
+changes will be made to it.
+
+:
+
+> *Note:* clang-format and clang-tidy are both applied to the source code in this project.
+clang-format will automatically reformat the source code, but clang-tidy only reports errors.
+Therefore, the code will not compile if you do not follow the required standards.
 
 ## Line Length
 
 The length of all lines (source code, documentation such as markdown files, etc.) should not exceed
-132 characters. This length
+100 characters. This length
 is selected as a compromise because 80 columns leads to the wrapping of too many source lines, and
 exceeding 100 characters may
 cause problems on smaller displays.
@@ -27,7 +29,7 @@ IDEs will be glady accepted.
 
 :
 
-> *Note:* clang-format modifies lines inC++ header and source files to not exceed 100 characters.
+> *Note:* clang-format modifies lines in C++ header and source files to not exceed 100 characters.
 There is no check in other file types.
 
 ## File Naming Conventions
