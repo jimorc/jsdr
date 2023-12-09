@@ -12,7 +12,7 @@ settings files for other IDEs.
 
 ## MacOS
 
-You will need a number of tools to build the jSDR project. The following
+You will need a number of tools to build the jsdr project. The following
 terminal commands show how to install them. It assumes that you have already
 installed [Homebrew](https://brew.sh/) on your system.
 
