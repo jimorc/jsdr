@@ -1,6 +1,6 @@
-# How to Build jSDR
+# How to Build jsdr
 
-The jSDR project is mainly written in C++ and uses CMake to build the project.
+The jsdr project is mainly written in C++ and uses CMake to build the project.
 This means that the project can be built either from the command line, or from
 just about any IDE that supports C++.
 
@@ -31,21 +31,21 @@ ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
 
 ```
 
-Enter the following from the command line to download the jSDR project files:
+Enter the following from the command line to download the jsdr project files:
 
 ```zsh
 cd <your-root-project-directory>
-git clone https://github.com/jimorc/jSDR.git
+git clone https://github.com/jimorc/jsdr.git
 ```
 
-For example, my root project directory is `~/Projects`, not `~/Projects/jSDR`.
+For example, my root project directory is `~/Projects`, not `~/Projects/jsdr`.
 
-### Building jSDR from the Command Line
+### Building jsdr from the Command Line
 
-To build jSDR from the command line, enter the following:
+To build jsdr from the command line, enter the following:
 
 ```zsh
-cd jSDR
+cd jsdr
 mkdir build
 cd build
 cmake .. 
@@ -60,7 +60,7 @@ Because `ninja` runs build commands in parallel by default, you don't gain
 anything by using the `-j` command line option unless you want to force running
 a single threaded build.
 
-### Building jSDR using an IDE
+### Building jsdr using an IDE
 
 If your IDE automatically runs `cmake`, you can simply open the jSDR project
 directory in your IDE. For example, Visual Studio Code does this.
@@ -68,7 +68,7 @@ If you must generate IDE-specific build files, then at
 the command line, enter:
 
 ```zsh
-cd jSDR
+cd jsdr
 mkdir build
 cd build
 cmake .. -G <build-tool-generator>
