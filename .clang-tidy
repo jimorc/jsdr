@@ -1,7 +1,7 @@
 # ---
 
 Checks: 'bugprone-*,cert-*,clang-diagnostic-*,clang-analyzer-*,concurrency-*'
-  'cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*'
-  ',google-*'
+  'cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,'
+  'google-*'
 HeaderFilterRegex: ''
 WarningsAsErrors: '*'
