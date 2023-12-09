@@ -21,9 +21,12 @@ I am currently working on the important stuff for this project:
 - Formatting and linting to match the coding standards.
 - After that, maybe a contributing guideline.
 
+Hey, it has to be done once and can be shared with all future projects, so I am doing it now.
+
 ## How to Build
 
 Because it is intended that this project be built on MacOS, Windows, and Linux,
 and because it uses a potentially large number of open source libraries, the
 build instructions can be quite extensive. For that reason, the build
-instructions are kept in a separate document: [Building jsdr](Building_jsdr.md)
+instructions are kept in a separate document: 
+[PROJECT_BUILD_INSTRUCTIONS.md](PROJECT_BUILD_INSTRUCTIONS.md).
