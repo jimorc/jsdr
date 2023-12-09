@@ -1,4 +1,4 @@
-#include <jSDRConfig.h>
+#include "jsdr_config.h"
 
 #include <filesystem>
 #include <fstream>

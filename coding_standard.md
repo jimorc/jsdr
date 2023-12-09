@@ -49,7 +49,7 @@ Directory and file names shall match the following criteria:
 - Lower case ASCII only.
 - Words in the names may be separated by single underscore (_) characters. The use of dashes (-) is
 discouraged.
-_ There shall be no whitespace in the names.
+- There shall be no whitespace in the names.
 
 ### Markdown File Mames
 

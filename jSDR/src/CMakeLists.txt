@@ -5,7 +5,7 @@
 
 set(CMAKE_CXX_FLAGS -Wall)
 
-set(SOURCES jSDRApp.cpp jSDRMainFrame.cpp jSDRConfig.cpp)
+set(SOURCES jsdr_app.cpp jsdr_mainframe.cpp jsdr_config.cpp)
 
 add_executable(
     jsdr

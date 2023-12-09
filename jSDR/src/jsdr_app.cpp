@@ -1,6 +1,6 @@
-#include "jSDRApp.h"
+#include "jsdr_app.h"
 
-#include "jSDRMainFrame.h"
+#include "jsdr_mainframe.h"
 
 wxIMPLEMENT_APP(jsdr::jSDRApp);
 

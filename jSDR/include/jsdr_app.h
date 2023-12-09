@@ -1,6 +1,6 @@
 #include <wx/wx.h>
 
-#include "jSDRConfig.h"
+#include "jsdr_config.h"
 
 namespace jsdr {
    class jSDRApp : public wxApp {

@@ -1,4 +1,4 @@
-#include "jSDRMainFrame.h"
+#include "jsdr_mainframe.h"
 
 namespace jsdr {
    jSDRMainFrame::jSDRMainFrame(const wxPoint upperLeft, const wxSize size)

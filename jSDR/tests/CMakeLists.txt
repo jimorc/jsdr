@@ -10,7 +10,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
     configtests.cpp
-    ../src/jSDRConfig.cpp
+    ../src/jsdr_config.cpp
 )
 
 include(Format)
