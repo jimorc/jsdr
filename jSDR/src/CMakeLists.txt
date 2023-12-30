@@ -6,10 +6,12 @@
 set(CMAKE_CXX_FLAGS -Wall)
 
 set(SOURCES jsdr_app.cpp jsdr_mainframe.cpp jsdr_config.cpp)
+set(INCLUDES ../include/jsdr_app.h ../include/jsdr_mainframe.h ../include/jsdr_config.h)
 
 add_executable(
     jsdr
     ${SOURCES}
+    ${INCLUDES}
 )
 
 include(Format)
