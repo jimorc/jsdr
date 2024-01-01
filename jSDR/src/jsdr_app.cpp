@@ -4,15 +4,14 @@
 
 #include "jsdr_mainframe.h"
 
-wxIMPLEMENT_APP(jsdr::jSDRApp);
+wxIMPLEMENT_APP(jsdr::JSdrApp);
 
 namespace jsdr {
 
-   auto jSDRApp::OnInit() -> bool {
-      auto           displayProperties = m_config.GetDisplayProperties();
-      jSDRMainFrame* frame             =   // NOLINT
-          new jSDRMainFrame(displayProperties->mainFramePosition,
-                            displayProperties->mainFrameSize);   // NOLINT
+   auto JSdrApp::OnInit() -> bool {
+      auto           displayProperties = _config.GetDisplayProperties();
+      JSdrMainFrame* frame             =   // NOLINT
+          new JSdrMainFrame(displayProperties->mainFramePosition, displayProperties->mainFrameSize);
       frame->Show();
       return true;
    }

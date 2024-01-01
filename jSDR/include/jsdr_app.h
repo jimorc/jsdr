@@ -1,14 +1,19 @@
+#ifndef JSDR_APP_H
+#define JSDR_APP_H
+
 #include <wx/wx.h>
 
 #include "jsdr_config.h"
 
 namespace jsdr {
-   class jSDRApp : public wxApp {
+   class JSdrApp : public wxApp {
    public:
-      bool OnInit() override;
-      auto Config() -> jSDRConfig& { return m_config; }
+      auto OnInit() -> bool override;
+      auto Config() -> JSdrConfig& { return _config; }
 
    private:
-      jSDRConfig m_config;
+      JSdrConfig _config;
    };
 }   // namespace jsdr
+
+#endif   // JSDR_APP_H

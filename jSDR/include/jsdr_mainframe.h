@@ -1,8 +1,14 @@
-#include <wx/wx.h>
+#ifndef JSDR_MAINFRAME_H
+#define JSDR_MAINFRAME_H
+
+#include <wx/defs.h>
+#include <wx/frame.h>
 
 namespace jsdr {
-   class jSDRMainFrame : public wxFrame {
+   class JSdrMainFrame : public wxFrame {
    public:
-      jSDRMainFrame(const wxPoint upperLeft, const wxSize size);
+      JSdrMainFrame(wxPoint upperLeft, wxSize size);
    };
 }   // namespace jsdr
+
+#endif   // JSDR_MAINFRAME_H

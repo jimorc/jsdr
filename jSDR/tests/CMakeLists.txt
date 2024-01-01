@@ -16,8 +16,7 @@ add_executable(tests
 include(Format)
 Format(tests .)
 
-include(ClangTidy)
-AddClangTidy(tests)
+
 
 target_include_directories(tests 
     PRIVATE ../include

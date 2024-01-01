@@ -1,7 +1,23 @@
 # ---
 
-Checks: 'bugprone-*,cert-*,clang-diagnostic-*,clang-analyzer-*,concurrency-*'
-  'cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,'
-  'google-*'
+Checks: 'bugprone-*,cert-*,
+    clang-diagnostic-*,
+    clang-analyzer-*,
+    concurrency-*,
+    cppcoreguidelines-*,
+    google-*,
+    misc-*,
+    modernize-*,
+    performance-*,
+    portability-*,
+    readability-*,
+    llvm-header-guard'
 HeaderFilterRegex: ''
 WarningsAsErrors: '*'
+CheckOptions:
+    readability-identifier-naming.ClassCase: CamelCase
+    readability-identifier-naming.PublicMethodCase: CamelCase
+    readability-identifier-naming.ProtectedMethodCase: CamelCase
+    readability-identifier-naming.PrivateMethodCase: CamelCase
+    readability-identifier-naming.PrivateMemberCase: camelBack
+    readability-identifier-naming.PrivateMemberPrefix: _

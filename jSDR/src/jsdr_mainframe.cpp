@@ -5,6 +5,6 @@
 #include <wx/gdicmn.h>
 
 namespace jsdr {
-   jSDRMainFrame::jSDRMainFrame(const wxPoint upperLeft, const wxSize size)
+   JSdrMainFrame::JSdrMainFrame(wxPoint upperLeft, wxSize size)
       : wxFrame(nullptr, wxID_ANY, "jSDR", upperLeft, size) {}
 }   // namespace jsdr

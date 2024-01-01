@@ -8,6 +8,8 @@ set(CMAKE_CXX_FLAGS -Wall)
 set(SOURCES jsdr_app.cpp jsdr_mainframe.cpp jsdr_config.cpp)
 set(INCLUDES ../include/jsdr_app.h ../include/jsdr_mainframe.h ../include/jsdr_config.h)
 
+include(ClangTidy)
+
 add_executable(
     jsdr
     ${SOURCES}
@@ -17,9 +19,6 @@ add_executable(
 include(Format)
 Format(jsdr .)
 Format(jsdr ./../include)
-
-include(ClangTidy)
-#AddClangTidy(jsdr)
 
 target_include_directories(
     jsdr
