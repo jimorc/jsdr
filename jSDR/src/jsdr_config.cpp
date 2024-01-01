@@ -1,34 +1,46 @@
 #include "jsdr_config.h"
 
-#include <filesystem>
+#include <wx/gdicmn.h>
+
+#include <cstdlib>
 #include <fstream>
+#include <locale>
+#include <memory>
+#include <string>
 
 namespace jsdr {
-   jSDRConfig::jSDRConfig() {
-      std::filesystem::path cfgFile(getenv("HOME"));
-      cfgFile /= m_configFileName;
-      if (std::filesystem::exists(cfgFile)) {
+   const char* const kConfigFileName = "jsdr.config";
+
+   auto jSDRConfig::LoadDisplayProperties() -> ConfigFileStatus {
+      const auto* home = getenv("HOME");   // NOLINT
+      if (home != nullptr) {
+         _configFileName = home + std::string(kConfigFileName);
+      } else {
+         return ConfigFileStatus::kNoUser;
+      }
+      if (ConfigFileExists()) {
          std::ifstream configStream;
          configStream.imbue(std::locale());
-         configStream.open(cfgFile);
+         configStream.open(_configFileName);
          configStream >> m_values;
          configStream.close();
-      } else {
-         setDefaultConfigValues();
+         return ConfigFileStatus::kOk;
       }
+      SetDefaultConfigValues();
+      return ConfigFileStatus::kFileInitialized;
    }
 
-   jSDRConfig::~jSDRConfig() noexcept {
-      std::filesystem::path cfgFile(getenv("HOME"));
-      cfgFile /= m_configFileName;
+   auto jSDRConfig::StoreDisplayProperties() -> bool {
+      if (_configFileName.empty()) { return false; }
       std::ofstream configStream;
       configStream.imbue(std::locale());
-      configStream.open(cfgFile);
-      configStream << m_values << std::endl;
+      configStream.open(_configFileName);
+      configStream << m_values << '\n';
       configStream.close();
+      return true;
    }
 
-   void jSDRConfig::setDefaultDisplayValues() {
+   void jSDRConfig::SetDefaultDisplayValues() {
       m_values["mainFrame"]["displayNumber"]  = 0;
       m_values["mainFrame"]["position"]["x"]  = wxDefaultPosition.x;
       m_values["mainFrame"]["position"]["y"]  = wxDefaultPosition.y;
@@ -36,16 +48,15 @@ namespace jsdr {
       m_values["mainFrame"]["size"]["height"] = wxDefaultSize.GetHeight();
    }
 
-   void jSDRConfig::setDefaultConfigValues() { setDefaultDisplayValues(); }
+   void jSDRConfig::SetDefaultConfigValues() { SetDefaultDisplayValues(); }
 
-   std::shared_ptr<jSDRConfig::DisplayProperties> jSDRConfig::getDisplayProperties() {
-      auto displayProps               = std::make_shared<jSDRConfig::DisplayProperties>();
-      displayProps->displayNumber     = m_values["mainFrame"]["displayNumber"].asInt();
-      int x                           = m_values["mainFrame"]["position"]["x"].asInt();   // NOLINT
-      int y                           = m_values["mainFrame"]["position"]["y"].asInt();   // NOLINT
+   auto jSDRConfig::GetDisplayProperties() -> std::shared_ptr<jSDRConfig::DisplayProperties> {
+      auto      displayProps          = std::make_shared<jSDRConfig::DisplayProperties>();
+      const int x                     = m_values["mainFrame"]["position"]["x"].asInt();   // NOLINT
+      const int y                     = m_values["mainFrame"]["position"]["y"].asInt();   // NOLINT
       displayProps->mainFramePosition = wxPoint(x, y);
-      int width                       = m_values["mainFrame"]["size"]["width"].asInt();
-      int height                      = m_values["mainFrame"]["size"]["width"].asInt();
+      const int width                 = m_values["mainFrame"]["size"]["width"].asInt();
+      const int height                = m_values["mainFrame"]["size"]["width"].asInt();
       displayProps->mainFrameSize     = wxSize(width, height);
       return displayProps;
    }

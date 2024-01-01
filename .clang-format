@@ -38,10 +38,11 @@ BreakStringLiterals: true
 ColumnLimit: 100
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 2
+ConstructorInitializerIndentWidth: 3
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
+EmptyLineBeforeAccessModifier: Always
 FixNamespaceComments: true
 IncludeBlocks: Regroup
 IndentCaseLabels: false

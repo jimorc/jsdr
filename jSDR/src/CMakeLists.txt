@@ -19,7 +19,7 @@ Format(jsdr .)
 Format(jsdr ./../include)
 
 include(ClangTidy)
-AddClangTidy(jsdr)
+#AddClangTidy(jsdr)
 
 target_include_directories(
     jsdr

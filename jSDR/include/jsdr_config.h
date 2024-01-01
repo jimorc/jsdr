@@ -1,26 +1,36 @@
 #include <json/json.h>
 #include <wx/wx.h>
 
+#include <filesystem>
 #include <memory>
 #include <string>
 
 namespace jsdr {
+   enum class ConfigFileStatus {
+      kOk,
+      kNoUser,
+      kFileInitialized,
+   };
+
    class jSDRConfig {
    public:
       struct DisplayProperties {
-         int     displayNumber     = 0;
          wxPoint mainFramePosition = wxDefaultPosition;
          wxSize  mainFrameSize     = wxDefaultSize;
       };
-      jSDRConfig();
-      ~jSDRConfig() noexcept;
-      std::shared_ptr<DisplayProperties> getDisplayProperties();
-      Json::Value&                       values() { return m_values; }
+      jSDRConfig()  = default;
+      ~jSDRConfig() = default;
+      ;
+      auto         LoadDisplayProperties() -> ConfigFileStatus;
+      auto         StoreDisplayProperties() -> bool;
+      auto         GetDisplayProperties() -> std::shared_ptr<DisplayProperties>;
+      Json::Value& values() { return m_values; }
+      auto         ConfigFileExists() -> bool { return std::filesystem::exists(_configFileName); }
+      void         SetDefaultConfigValues();
+      void         SetDefaultDisplayValues();
 
    private:
-      void        setDefaultConfigValues();
-      void        setDefaultDisplayValues();
-      std::string m_configFileName{ "jSDR.config" };
+      std::string _configFileName;
       Json::Value m_values;
    };
 }   // namespace jsdr

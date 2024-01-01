@@ -5,8 +5,8 @@
 namespace jsdr {
    class jSDRApp : public wxApp {
    public:
-      bool        OnInit() override;
-      jSDRConfig& Config() { return m_config; }
+      bool OnInit() override;
+      auto Config() -> jSDRConfig& { return m_config; }
 
    private:
       jSDRConfig m_config;
