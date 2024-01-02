@@ -15,9 +15,49 @@ Checks: 'bugprone-*,cert-*,
 HeaderFilterRegex: ''
 WarningsAsErrors: '*'
 CheckOptions:
+    readability-identifier-naming.AbstractClassCase: CamelCase
     readability-identifier-naming.ClassCase: CamelCase
-    readability-identifier-naming.PublicMethodCase: CamelCase
-    readability-identifier-naming.ProtectedMethodCase: CamelCase
-    readability-identifier-naming.PrivateMethodCase: CamelCase
+    readability-identifier-naming.ClassConstantCase: CamelCase
+    readability-identifier-naming.ClassConstantPrefix: k
+    readability-identifier-naming.ClassMethodCase: CamelCase
+    readability-identifier-naming.ConceptCase: CamelCase
+    readability-identifier-naming.ConstantCase: camelBack
+    readability-identifier-naming.ConstexprVariableCase: camelBack
+    readability-identifier-naming.ConstexprVariablePrefix: k
+    readability-identifier-naming.EnumCase: CamelCase
+    readability-identifier-naming.EnumConstantCase: CamelCase
+    readability-identifier-naming.EnumConstantPrefix: e
+    readability-identifier-naming.FunctionCase: CamelCase    
+    readability-identifier-naming.GlobalConstantCase: CamelCase
+    readability-identifier-naming.GlobalConstantPrefix: k
+    readability-identifier-naming.GlobalConstantPointerCase: CamelCase
+    readability-identifier-naming.GlobalConstantPointerPrefix: k
+    readability-identifier-naming.GlobalFunctionCase: CamelCase
+    readability-identifier-naming.GlobalPointerCase: camelBack
+    readability-identifier-naming.GlobalVariableCase: CamelCase
+    readability-identifier-naming.InlineNamespaceCase: lower_case
+    readability-identifier-naming.LocalConstantCase: camelBack
+    readability-identifier-naming.LocalConstantPointerCase: camelBack
+    readability-identifier-naming.LocalPointerCase: camelBack
+    readability-identifier-naming.LocalVariableCase: camelBack
+    readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
+    readability-identifier-naming.MemberCase: camelBack
+    readability-identifier-naming.MethodCase: CamelCase
+    readability-identifier-naming.NamespaceCase: lower_case
+    readability-identifier-naming.ParameterCase: camelBack
+    readability-identifier-naming.PointerParameterCase: camelBack
     readability-identifier-naming.PrivateMemberCase: camelBack
     readability-identifier-naming.PrivateMemberPrefix: _
+    readability-identifier-naming.StaticConstantCase: CamelCase
+    readability-identifier-naming.StaticConstantPrefix: k
+    readability-identifier-naming.StaticVariableCase: CamelCase
+    readability-identifier-naming.StaticVariablePrefix: k
+    readability-identifier-naming.StructCase: CamelCase
+    readability-identifier-naming.TemplateParameterCase: CamelCase
+    readability-identifier-naming.TypeAliasCase: camelBack
+    readability-identifier-naming.TypedefCase: camelBack
+    readability-identifier-naming.TypeTemplateParameterCase: camelBack
+    readability-identifier-naming.UnionCase: camelBack
+    readability-identifier-naming.ValueTemplateParameterCase: camelBack
+    readability-identifier-naming.VariableCase: camelBack
+    readability-identifier-naming.VirtualMethodCase: CamelCase

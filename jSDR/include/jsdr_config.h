@@ -10,9 +10,9 @@
 
 namespace jsdr {
    enum class ConfigFileStatus {
-      kOk,
-      kNoUser,
-      kFileInitialized,
+      eOk,
+      eNoUser,
+      eFileInitialized,
    };
 
    class JSdrConfig {

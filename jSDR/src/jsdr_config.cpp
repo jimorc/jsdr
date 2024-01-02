@@ -16,7 +16,7 @@ namespace jsdr {
       if (home != nullptr) {
          _configFileName = home + std::string(kConfigFileName);
       } else {
-         return ConfigFileStatus::kNoUser;
+         return ConfigFileStatus::eNoUser;
       }
       if (ConfigFileExists()) {
          std::ifstream configStream;
@@ -24,10 +24,10 @@ namespace jsdr {
          configStream.open(_configFileName);
          configStream >> _values;
          configStream.close();
-         return ConfigFileStatus::kOk;
+         return ConfigFileStatus::eOk;
       }
       SetDefaultConfigValues();
-      return ConfigFileStatus::kFileInitialized;
+      return ConfigFileStatus::eFileInitialized;
    }
 
    auto JSdrConfig::StoreDisplayProperties() -> bool {
