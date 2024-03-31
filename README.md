@@ -10,7 +10,7 @@ probable that this project will never reach a usable state.
 
 This project is in its very initial stage and there is little that is usable at this point.
 
-## Building go_sdr
+## Building jsdr
 
 **Notes:** 
 
@@ -44,7 +44,8 @@ be included with the issue that you report.
 
 To build the applications, open a terminal window, or the terminal window in VSCode, and enter:
 ```
-cd ~/go/go_sdr/cmd/<app-name>
+git clone https://github.com/jimorc/jsdr.git  # only needs to be done once
+cd ~/go/jsdr/cmd/<app-name>
 ```
 where <app-name> is either
 * enumerate_sdrs
@@ -58,9 +59,9 @@ or
 go build .
 ```
 
-If you change any of the images in `.../go_sdr/images`, then do the following:
+If you change any of the images in `.../jsdr/images`, then do the following:
 ```
-cd ~/go/go_sdr/cmd/go_sdr
+cd ~/go/jsdr/cmd/jsdr
 ./bundle.sh
 go run .   # or go build .
 '''
