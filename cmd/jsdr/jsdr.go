@@ -1,7 +1,7 @@
 package main
 
 import (
-	"internal/gosdrgui"
+	"internal/jsdrgui"
 	"internal/soapy_logging"
 
 	"fyne.io/fyne/v2/app"
@@ -15,6 +15,6 @@ func main() {
 	sdrlogger.Log(sdrlogger.Info, "go_sdr Logging")
 
 	sdrApp := app.New()
-	mainWindow := gosdrgui.NewMainWindow(sdrApp)
+	mainWindow := jsdrgui.NewMainWindow(sdrApp)
 	mainWindow.ShowAndRun()
 }

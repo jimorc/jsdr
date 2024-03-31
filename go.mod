@@ -1,10 +1,10 @@
-module github.com/jimorc/go_sdr
+module github.com/jimorc/jsdr
 
 go 1.22.0
 
 require (
 	github.com/pothosware/go-soapy-sdr v0.7.4
-	internal/gosdrgui v1.0.0
+	internal/jsdrgui v1.0.0
 )
 
 require (
@@ -48,4 +48,4 @@ replace internal/soapy_logging => ./internal/soapy_logging
 
 replace internal/gui => ./internal/gui
 
-replace internal/gosdrgui => ./internal/gosdrgui
+replace internal/jsdrgui => ./internal/jsdrgui

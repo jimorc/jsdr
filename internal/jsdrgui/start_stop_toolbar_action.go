@@ -1,5 +1,5 @@
-// Package gosdrgui contains the detailed widgets used in the go_sdr app.
-package gosdrgui
+// Package jsdrgui contains the detailed widgets used in the go_sdr app.
+package jsdrgui
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-module github.com/jimorc/go_sdr/internal/settings
+module github.com/jimorc/jsdr/internal/settings
 
 go 1.22.1
 

@@ -1,4 +1,4 @@
-package gosdrgui
+package jsdrgui
 
 import (
 	"fyne.io/fyne/v2"
@@ -7,7 +7,7 @@ import (
 
 // NewMainWindow creates the main window for the go_sdr app.
 func NewMainWindow(sdrApp fyne.App) fyne.Window {
-	mainWin := sdrApp.NewWindow("go_sdr")
+	mainWin := sdrApp.NewWindow("jsdr")
 	startStop := NewStartStopToolbarAction()
 	toolBar := widget.NewToolbar(startStop)
 
