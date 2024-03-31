@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
@@ -45,5 +46,21 @@ func TestSettingsUnmarshalEmptyJSONString(t *testing.T) {
 	}
 	if testSettings.Logging.LoggingLevel != defaultSettings.Logging.LoggingLevel {
 		t.Fatalf("TestSettingsUnmarshalEmptyJSONString has overridden Logging.LoggingLevel")
+	}
+}
+
+func TestSettingsMarshal(t *testing.T) {
+	settings := NewSettings()
+	settings.Logging.LoggingFile = "log.log"
+	settings.Logging.LoggingLevel = sdrlogger.Warning
+
+	json, err := settings.marshal()
+	if err != nil {
+		t.Fatal("TestSettingsMarshal could not marshal the settings struct")
+	}
+	settingsAsJSON := string(json)
+	expected := `{"logging":{"logging_file":"log.log","logging_level":4}`
+	if !strings.HasPrefix(settingsAsJSON, expected) {
+		t.Fatalf("TestSettingsMarshal did not marshal correctly: %v, expected: %v", settingsAsJSON, expected)
 	}
 }

@@ -33,3 +33,8 @@ func (s *Settings) Unmarshal(data []byte) error {
 	}
 	return json.Unmarshal(data, s)
 }
+
+// marshal marshals the contents of the Settings struct.
+func (s *Settings) marshal() ([]byte, error) {
+	return json.Marshal(s)
+}
