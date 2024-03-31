@@ -17,7 +17,7 @@ func TestSettingsUnmarshalLoggingValues(t *testing.T) {
 		}
 	`
 
-	var testSettings Settings
+	testSettings := NewSettings()
 	err := testSettings.Unmarshal([]byte(settings))
 	if err != nil {
 		t.Fatalf("TestSettingsUnmarshalLoggingValues could not unmarshal json: %v", err)
@@ -34,15 +34,16 @@ func TestSettingsUnmarshalLoggingValues(t *testing.T) {
 
 func TestSettingsUnmarshalEmptyJSONString(t *testing.T) {
 	var settings string = ``
-	var testSettings Settings
+	testSettings := NewSettings()
+	defaultSettings := NewSettings()
 	err := testSettings.Unmarshal([]byte(settings))
 	if err != nil {
 		t.Fatalf("TestSettingsUnmarshalEmptyJSONString could not unmarshal an empty JSON string: %v", err)
 	}
-	if testSettings.Logging.LoggingFile != "" {
+	if testSettings.Logging.LoggingFile != defaultSettings.Logging.LoggingFile {
 		t.Fatalf("TestSettingsUnmarshalEmptyJSONString has overridden Logging.LoggingFile")
 	}
-	if testSettings.Logging.LoggingLevel != 0 {
+	if testSettings.Logging.LoggingLevel != defaultSettings.Logging.LoggingLevel {
 		t.Fatalf("TestSettingsUnmarshalEmptyJSONString has overridden Logging.LoggingLevel")
 	}
 }
