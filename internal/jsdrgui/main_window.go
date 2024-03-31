@@ -9,7 +9,8 @@ import (
 func NewMainWindow(sdrApp fyne.App) fyne.Window {
 	mainWin := sdrApp.NewWindow("jsdr")
 	startStop := NewStartStopToolbarAction()
-	toolBar := widget.NewToolbar(startStop)
+	settingsToolbarAction := NewSettingsToolbarAction()
+	toolBar := widget.NewToolbar(settingsToolbarAction, startStop)
 
 	mainWin.SetContent(toolBar)
 
