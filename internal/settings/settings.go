@@ -2,6 +2,8 @@ package settings
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
@@ -24,6 +26,52 @@ func NewSettings() *Settings {
 	settings.Logging.LoggingLevel = sdrlogger.Info
 
 	return &settings
+}
+
+// Load opens the JSON formatted file *filename* and unmarshals it into the Settings struct.
+func (s *Settings) Load() error {
+	settingsFileName := os.Getenv("HOME") + "/.jsdr"
+	file, err := os.Open(settingsFileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	fInfo, err := os.Stat(settingsFileName)
+	if err != nil {
+		return err
+	}
+	fileSize := fInfo.Size()
+	data := make([]byte, fileSize)
+	_, err = file.Read(data)
+	if err != nil {
+		return err
+	}
+	s.Unmarshal(data)
+	return nil
+}
+
+// Save writes the JSON-formatted settings to *filename*.
+func (s *Settings) Save() error {
+	settingsFileName := os.Getenv("HOME") + "/.jsdr"
+	file, err := os.Create(settingsFileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	data, err := s.marshal()
+	if err != nil {
+		return err
+	}
+	numBytesWritten, err := file.Write(data)
+	if err != nil {
+		return err
+	}
+	if numBytesWritten != len(data) {
+		return fmt.Errorf("Settings.Save wrote %d of %d bytes", numBytesWritten, len(data))
+	}
+	return nil
 }
 
 // Unmarshal unmarshals the contents of the data byte array into the Settings struct.

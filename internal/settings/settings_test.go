@@ -64,3 +64,30 @@ func TestSettingsMarshal(t *testing.T) {
 		t.Fatalf("TestSettingsMarshal did not marshal correctly: %v, expected: %v", settingsAsJSON, expected)
 	}
 }
+
+func TestSettingsSaveLoad(t *testing.T) {
+	logFile := "log.log"
+	settings := NewSettings()
+	settings.Logging.LoggingFile = logFile
+	settings.Logging.LoggingLevel = sdrlogger.Info
+
+	err := settings.Save()
+	if err != nil {
+		t.Fatalf("TestSettingsSaveLoad failed on Save call: %v", err)
+	}
+
+	newSettings := NewSettings()
+	err = newSettings.Load()
+	if err != nil {
+		t.Fatalf("TestSettingsSaveLoad failed on Load call: %v", err)
+	}
+
+	loggingFileName := newSettings.Logging.LoggingFile
+	if loggingFileName != settings.Logging.LoggingFile {
+		t.Fatalf("TestSettingsSaveLoad failed to load LoggingFile: got %v, expected %v", loggingFileName, settings.Logging.LoggingFile)
+	}
+	loggingLevel := newSettings.Logging.LoggingLevel
+	if loggingLevel != settings.Logging.LoggingLevel {
+		t.Fatalf("TestSettingsSaveLoad failed to load LoggingFile: got %v, expected %v", loggingLevel, settings.Logging.LoggingLevel)
+	}
+}
