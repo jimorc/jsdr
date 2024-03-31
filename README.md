@@ -1,4 +1,4 @@
-# go_sdr
+# jsdr
 An SDR Receiver written in Go.
 
 ## Status
@@ -10,21 +10,22 @@ probable that this project may never reach a usable state.
 
 This project is in its very initial stage and there is little that is usable at this point.
 
-## Building go_sdr
+## Building jsdr
 
-**Note:** This project uses the go-soapy-sdr module. There is a bug in the call to `device.UnmakeList` that causes a double free
+**Notes:** 
+1. This project uses the go-soapy-sdr module. There is a bug in the call to `device.UnmakeList` that causes a double free
 error. See [go-soapy-sdr issue #4](https://github.com/pothosware/go-soapy-sdr/issues/4) for more information. Until that bug is
 fixed, the programs will abort on cleanup.
 
-All development at the moment is being done on an M1 Pro Macbook Pro running MacOS 14, so the only instructions provided 
+1. Almost all development at the moment is being done on an M1 Pro Macbook Pro running MacOS 14, so the only instructions provided 
 below are for that system. I spent a limited amount of time setting it up on Kubuntu 22.04 and incomplete instructions for that
 system are also provided below. If a workable SDR receiver is developed on MacOS, I intend to port to both Linux and Windows, 
 but that is far in the
 future. You could help by doing this porting work, but please first see the [Contributing](CONTRIBUTING.md) document.
 
-This project is built mainly in Go using Visual Studio Code, so the instructions are provided for that combination.
+1. This project is built mainly in Go using Visual Studio Code, so the instructions are provided for that combination.
 
-The only dongles that I have that I can use in developing this project are RTL-SDR v3 and v4. Therefore, I have only listed
+1. The only dongles that I have that I can use in developing this project are RTL-SDR v3 and v4. Therefore, I have only listed
 libraries required to access those dongles.
 
 ### Building on MacOS
