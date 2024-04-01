@@ -4,6 +4,7 @@ import (
 	"internal/jsdrgui"
 	"internal/soapy_logging"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
@@ -16,5 +17,7 @@ func main() {
 
 	sdrApp := app.New()
 	mainWindow := jsdrgui.NewMainWindow(sdrApp)
+	mainWindow.Resize(fyne.NewSize(800, 300))
 	mainWindow.ShowAndRun()
+
 }

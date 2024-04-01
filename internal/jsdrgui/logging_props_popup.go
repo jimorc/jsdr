@@ -1,0 +1,41 @@
+package jsdrgui
+
+import (
+	"fmt"
+
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
+)
+
+type modalPopUp struct {
+	popUp *widget.PopUp
+}
+
+// newSDRLoggerSettingsPopUp creates the logging modal popup.
+// The return value is a pointer to the modal popup. This popup is displayed over the window specified in the
+// calling parameter when popup.Show() is called.
+// The popup is used to review and change logging parameters such as the name of the logging file and the the logging level.
+func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
+	loggingFileName := widget.NewEntry()
+	loggingFileLabel := widget.NewLabel("SDR Logging File Name:")
+	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
+	loggingLevelSelect := widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
+		"Trace", "SSI"}, loggingLevelSelectChanged)
+	var loggingPopUp modalPopUp
+	container := container.NewGridWithColumns(2, loggingFileLabel, loggingFileName, loggingLevelLabel, loggingLevelSelect,
+		widget.NewLabel(""), widget.NewButton("Close", loggingPopUp.closeLoggingPopUp))
+	loggingPopUp.popUp = widget.NewModalPopUp(container, (*win).Canvas())
+	return loggingPopUp.popUp
+}
+
+// loggingLevelSelectChanged is called whenever the logging level in the logging popup is changed.
+// The parameter is the new logging level
+func loggingLevelSelectChanged(level string) {
+	fmt.Printf("Logging level changed to %v\n", level)
+}
+
+// closeLoggingPopUp closes the logging popup window.
+func (modPopUp *modalPopUp) closeLoggingPopUp() {
+	modPopUp.popUp.Hide()
+}
