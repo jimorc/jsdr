@@ -2,7 +2,8 @@ package main
 
 import (
 	"internal/jsdrgui"
-	"internal/soapy_logging"
+	"internal/settings"
+	"internal/soapylogging"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -10,10 +11,17 @@ import (
 )
 
 func main() {
-	soapy_logging.CreateSoapyLogfileName("go_sdr.log")
-	sdrlogger.RegisterLogHandler(soapy_logging.LogSoapy)
-	sdrlogger.SetLogLevel(sdrlogger.Info)
-	sdrlogger.Log(sdrlogger.Info, "go_sdr Logging")
+	// Create and load program settings.
+	settings.JsdrSettings = settings.NewSettings()
+
+	// Set up program logging.
+	err1 := soapylogging.CreateSoapyLogfileName(settings.JsdrSettings.Logging.LoggingFile)
+	if err1 == nil {
+		soapylogging.SoapyLoggingActive = true
+		sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
+		sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
+		sdrlogger.Log(sdrlogger.Info, "jsdr Logging")
+	}
 
 	sdrApp := app.New()
 	mainWindow := jsdrgui.NewMainWindow(sdrApp)

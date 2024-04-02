@@ -5,17 +5,18 @@ import (
 	"log"
 	"strings"
 
-	"internal/soapy_logging"
+	"internal/soapylogging"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
 func main() {
-	soapy_logging.CreateSoapyLogfileName("enumerate_sdrs.log")
+	soapylogging.SoapyLoggingActive = true
+	soapylogging.CreateSoapyLogfileName("enumerate_sdrs.log")
 
 	// Test log levels
-	sdrlogger.RegisterLogHandler(soapy_logging.LogSoapy)
+	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
 	sdrlogger.SetLogLevel(sdrlogger.SSI)
 	sdrlogger.Log(sdrlogger.Info, "Soapy SDR")
 	sdrlogger.Logf(sdrlogger.Info, "%v\n", "Demonstration")

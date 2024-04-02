@@ -1,10 +1,12 @@
 module github.com/jimorc/jsdr/internal/jsdrgui
 
-go 1.22.0
+go 1.22.1
 
 require fyne.io/fyne/v2 v2.4.4
 
 require internal/gui v1.0.0
+
+require internal/settings v1.0.0
 
 require (
 	github.com/fredbi/uri v1.0.0 // indirect
@@ -13,6 +15,7 @@ require (
 	github.com/go-text/render v0.0.0-20230619120952-35bccb6164b8 // indirect
 	github.com/go-text/typesetting v0.1.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
+	github.com/pothosware/go-soapy-sdr v0.7.4 // indirect
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/yuin/goldmark v1.5.5 // indirect
@@ -22,5 +25,7 @@ require (
 )
 
 replace internal/gui => ../gui
+
+replace internal/settings => ../settings
 
 replace bundle => ../..

@@ -1,4 +1,4 @@
-package soapy_logging
+package soapylogging
 
 import (
 	"fmt"
@@ -10,21 +10,35 @@ import (
 
 var soapyLogfileName string
 
-func CreateSoapyLogfileName(name string) {
+// SoapyLoggingActive is a flag that specifies if logging should be performed.
+//
+// Reasons for not performing logging include:
+// 1. Log file cannot be created.
+// 2. You do not want to log anything.
+var SoapyLoggingActive bool = false
+
+// CreateSoapyLogfileName creates the logging file.
+//
+// If the file already exists, it is truncated.
+// Returns error if the file cannot be created
+func CreateSoapyLogfileName(name string) error {
 	soapyLogfileName = name
 	logFile, err := os.Create(soapyLogfileName)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = logFile.Close()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-
+	return nil
 }
 
-// logSoapy receives and prints Soapy messages to be logged to the log file
+// LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
+	if !SoapyLoggingActive {
+		return
+	}
 	levelStr := "Unknown"
 	switch level {
 	case sdrlogger.Fatal:

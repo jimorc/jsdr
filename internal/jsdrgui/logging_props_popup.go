@@ -2,6 +2,7 @@ package jsdrgui
 
 import (
 	"fmt"
+	"internal/settings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -18,6 +19,7 @@ type modalPopUp struct {
 // The popup is used to review and change logging parameters such as the name of the logging file and the the logging level.
 func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
 	loggingFileName := widget.NewEntry()
+	loggingFileName.SetText(settings.JsdrSettings.Logging.LoggingFile)
 	loggingFileLabel := widget.NewLabel("SDR Logging File Name:")
 	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
 	loggingLevelSelect := widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",

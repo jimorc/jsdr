@@ -1,10 +1,11 @@
 module github.com/jimorc/jsdr
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/pothosware/go-soapy-sdr v0.7.4
 	internal/jsdrgui v1.0.0
+	internal/settings v1.0.0
 )
 
 require (
@@ -15,7 +16,7 @@ require (
 
 require (
 	internal/gui v1.0.0 // indirect
-	internal/soapy_logging v1.0.0
+	internal/soapylogging v1.0.0
 )
 
 require (
@@ -49,8 +50,10 @@ require (
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
 
-replace internal/soapy_logging => ./internal/soapy_logging
+replace internal/soapylogging => ./internal/soapylogging
 
 replace internal/gui => ./internal/gui
 
 replace internal/jsdrgui => ./internal/jsdrgui
+
+replace internal/settings => ./internal/settings
