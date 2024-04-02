@@ -23,3 +23,6 @@ go.work
 # Logging files
 enumerate_sdrs.log
 go_sdr.log
+
+# VSCode related files
+.vscode
