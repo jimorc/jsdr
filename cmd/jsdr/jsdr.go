@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"internal/jsdrgui"
 	"internal/settings"
 	"internal/soapylogging"
@@ -13,6 +14,7 @@ import (
 func main() {
 	// Create and load program settings.
 	settings.JsdrSettings = settings.NewSettings()
+	err := settings.JsdrSettings.Load()
 
 	// Set up program logging.
 	err1 := soapylogging.CreateSoapyLogfileName(settings.JsdrSettings.Logging.LoggingFile)
@@ -20,7 +22,12 @@ func main() {
 		soapylogging.SoapyLoggingActive = true
 		sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
 		sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
-		sdrlogger.Log(sdrlogger.Info, "jsdr Logging")
+		sdrlogger.Log(sdrlogger.Info, "jsdr Logging initialized")
+		if err != nil {
+			sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Unable to load settings file:\n    %v", err))
+		}
+	} else {
+		fmt.Printf("%v\n", err1)
 	}
 
 	sdrApp := app.New()
