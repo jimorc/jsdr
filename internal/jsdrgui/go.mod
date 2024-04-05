@@ -9,6 +9,7 @@ require internal/gui v1.0.0
 require (
 	github.com/pothosware/go-soapy-sdr v0.7.4
 	internal/settings v1.0.0
+	internal/soapylogging v1.0.0
 )
 
 require (
@@ -29,5 +30,7 @@ require (
 replace internal/gui => ../gui
 
 replace internal/settings => ../settings
+
+replace internal/soapylogging => ../soapylogging
 
 replace bundle => ../..

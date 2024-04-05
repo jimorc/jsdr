@@ -1,5 +1,7 @@
 module soapy_logging
 
-go 1.22.0
+go 1.22.1
 
 require github.com/pothosware/go-soapy-sdr v0.7.4
+
+replace internal/settings => ../settings

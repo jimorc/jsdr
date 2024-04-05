@@ -3,6 +3,7 @@ package jsdrgui
 import (
 	"fmt"
 	"internal/settings"
+	"internal/soapylogging"
 	"os"
 
 	"fyne.io/fyne/v2"
@@ -54,25 +55,36 @@ func loggingFileNameSubmitted(filename string) {
 	fmt.Printf("Submitted: File name: %v\n", filename)
 }
 
+// validateLoggingFileName validates the filename in loggingFileNameEntry
+//
+// Filename is valid if:
+// 1. It is the same as the file name in settings.JsdrSettings.Logging.LoggingFile; or,
+// 2. It exists and can be opened for writting; or,
+// 3. It can be created, and therefore opened for writing.
 func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) error {
 	fmt.Println("In validateLoggingFileName")
 	fileName := entry.entry.Text
 	if fileName == settings.JsdrSettings.Logging.LoggingFile {
+		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v matches settings", filename))
 		return nil
 	}
+	soapylogging.SoapyLoggingMutex.Lock()
+	defer soapylogging.SoapyLoggingMutex.Unlock()
 	file, err := os.OpenFile(fileName, os.O_RDWR, 0644)
 	if err != nil {
-		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - OpenFile error: %v", err))
+		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v cannot be opened: %v", filename, err))
 		file, err = os.Create(fileName)
 		if err != nil {
-			sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File Create error: %v", err))
+			sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v cannot be created: %v", filename, err))
 			return err
 		}
 		file.Close()
 		os.Remove(fileName)
+		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v can be created", filename))
 		return nil
 	}
 	file.Close()
+	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v exists and can be opened for writing", filename))
 	return nil
 }
 

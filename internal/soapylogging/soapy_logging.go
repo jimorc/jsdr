@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
+
+// SoapyLoggingMutex helps to make sure that the logging file name does not change while writing to the file.
+var SoapyLoggingMutex sync.Mutex
 
 var soapyLogfileName string
 
@@ -25,7 +29,6 @@ func CreateSoapyLogfileName(name string) error {
 	soapyLogfileName = name
 	logFile, err := os.Create(soapyLogfileName)
 	if err != nil {
-		return err
 	}
 	err = logFile.Close()
 	if err != nil {
@@ -36,9 +39,18 @@ func CreateSoapyLogfileName(name string) error {
 
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
+	fmt.Println(message)
+	go logMessage(level, message)
+}
+
+// logMessage must be run as a goroutine
+func logMessage(level sdrlogger.SDRLogLevel, message string) {
 	if !SoapyLoggingActive {
 		return
 	}
+	SoapyLoggingMutex.Lock()
+	defer SoapyLoggingMutex.Unlock()
+
 	levelStr := "Unknown"
 	switch level {
 	case sdrlogger.Fatal:
