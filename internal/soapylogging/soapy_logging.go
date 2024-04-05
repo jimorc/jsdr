@@ -39,14 +39,14 @@ func CreateSoapyLogfileName(name string) error {
 
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
+	if !SoapyLoggingActive {
+		return
+	}
 	go logMessage(level, message)
 }
 
 // logMessage must be run as a goroutine
 func logMessage(level sdrlogger.SDRLogLevel, message string) {
-	if !SoapyLoggingActive {
-		return
-	}
 	SoapyLoggingMutex.Lock()
 	defer SoapyLoggingMutex.Unlock()
 
@@ -77,7 +77,7 @@ func logMessage(level sdrlogger.SDRLogLevel, message string) {
 	}
 	defer logFile.Close()
 
-	_, err = logFile.WriteString(fmt.Sprintf("Soapy Logged: [%v] %v\n", levelStr, message))
+	_, err = logFile.WriteString(fmt.Sprintf("[%v] %v\n", levelStr, message))
 	if err != nil {
 		log.Panic(err)
 	}
