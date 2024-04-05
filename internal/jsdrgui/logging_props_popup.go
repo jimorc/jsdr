@@ -62,7 +62,6 @@ func loggingFileNameSubmitted(filename string) {
 // 2. It exists and can be opened for writting; or,
 // 3. It can be created, and therefore opened for writing.
 func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) error {
-	fmt.Println("In validateLoggingFileName")
 	fileName := entry.entry.Text
 	if fileName == settings.JsdrSettings.Logging.LoggingFile {
 		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v matches settings", filename))

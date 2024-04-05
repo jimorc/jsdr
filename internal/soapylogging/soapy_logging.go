@@ -39,7 +39,6 @@ func CreateSoapyLogfileName(name string) error {
 
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
-	fmt.Println(message)
 	go logMessage(level, message)
 }
 
