@@ -20,6 +20,9 @@ type loggingFileNameEntry struct {
 	entry *widget.Entry
 }
 
+var loggingFileName *loggingFileNameEntry
+var loggingLevelSelect *widget.Select
+
 func newLoggingFileNameEntry() *loggingFileNameEntry {
 	fileNameEntry := loggingFileNameEntry{entry: widget.NewEntry()}
 	fileNameEntry.entry.SetText(settings.JsdrSettings.Logging.LoggingFile)
@@ -34,17 +37,26 @@ func newLoggingFileNameEntry() *loggingFileNameEntry {
 // calling parameter when popup.Show() is called.
 // The popup is used to review and change logging parameters such as the name of the logging file and the the logging level.
 func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
-	loggingFileName := newLoggingFileNameEntry()
+	loggingFileName = newLoggingFileNameEntry()
 
 	loggingFileLabel := widget.NewLabel("SDR Logging File Name:")
 	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
-	loggingLevelSelect := widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
-		"Trace", "SSI"}, loggingLevelSelectChanged)
+	loggingLevelSelect = widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
+		"Trace", "SSI"}, nil)
+	loggingLevelSelect.SetSelectedIndex(int(settings.JsdrSettings.Logging.LoggingLevel - 1))
 	var loggingPopUp modalPopUp
 	container := container.NewGridWithColumns(2, loggingFileLabel, loggingFileName.entry, loggingLevelLabel, loggingLevelSelect,
-		widget.NewLabel(""), widget.NewButton("Close", loggingPopUp.closeLoggingPopUp))
+		widget.NewButton("Reset", resetLoggingValues), widget.NewButton("Close", loggingPopUp.closeLoggingPopUp))
 	loggingPopUp.popUp = widget.NewModalPopUp(container, (*win).Canvas())
 	return loggingPopUp.popUp
+}
+
+// resetLoggingValues resets the loggingFileName entry and the loggingLevelSelect to the values in JsdrSettings.
+func resetLoggingValues() {
+	loggingFileName.entry.SetText(settings.JsdrSettings.Logging.LoggingFile)
+	loggingLevelSelect.SetSelectedIndex(int(settings.JsdrSettings.Logging.LoggingLevel - 1))
+	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("Logging values reset to: %v, %v",
+		loggingFileName.entry.Text, loggingLevelSelect.Selected))
 }
 
 func (entry *loggingFileNameEntry) loggingFileNameChanged(fileName string) {
@@ -85,12 +97,6 @@ func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) erro
 	file.Close()
 	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File: %v exists and can be opened for writing", filename))
 	return nil
-}
-
-// loggingLevelSelectChanged is called whenever the logging level in the logging popup is changed.
-// The parameter is the new logging level.
-func loggingLevelSelectChanged(level string) {
-	fmt.Printf("Logging level changed to %v\n", level)
 }
 
 // closeLoggingPopUp closes the logging popup window.
