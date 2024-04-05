@@ -71,7 +71,7 @@ func loggingFileNameSubmitted(filename string) {
 //
 // Filename is valid if:
 // 1. It is the same as the file name in settings.JsdrSettings.Logging.LoggingFile; or,
-// 2. It exists and can be opened for writting; or,
+// 2. It exists and can be opened for writing; or,
 // 3. It can be created, and therefore opened for writing.
 func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) error {
 	fileName := entry.entry.Text
