@@ -2,6 +2,7 @@ package soapylogging
 
 import (
 	"fmt"
+	"internal/settings"
 	"log"
 	"os"
 	"sync"
@@ -12,30 +13,12 @@ import (
 // SoapyLoggingMutex helps to make sure that the logging file name does not change while writing to the file.
 var SoapyLoggingMutex sync.Mutex
 
-var soapyLogfileName string
-
 // SoapyLoggingActive is a flag that specifies if logging should be performed.
 //
 // Reasons for not performing logging include:
 // 1. Log file cannot be created.
 // 2. You do not want to log anything.
 var SoapyLoggingActive bool = false
-
-// CreateSoapyLogfileName creates the logging file.
-//
-// If the file already exists, it is truncated.
-// Returns error if the file cannot be created
-func CreateSoapyLogfileName(name string) error {
-	soapyLogfileName = name
-	logFile, err := os.Create(soapyLogfileName)
-	if err != nil {
-	}
-	err = logFile.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
@@ -49,6 +32,9 @@ func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
 func logMessage(level sdrlogger.SDRLogLevel, message string) {
 	SoapyLoggingMutex.Lock()
 	defer SoapyLoggingMutex.Unlock()
+
+	settings.SettingsMutex.Lock()
+	defer settings.SettingsMutex.Unlock()
 
 	levelStr := "Unknown"
 	switch level {
@@ -71,7 +57,7 @@ func logMessage(level sdrlogger.SDRLogLevel, message string) {
 	case sdrlogger.SSI:
 		levelStr = "SSI"
 	}
-	logFile, err := os.OpenFile(soapyLogfileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+	logFile, err := os.OpenFile(settings.JsdrSettings.Logging.LoggingFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}

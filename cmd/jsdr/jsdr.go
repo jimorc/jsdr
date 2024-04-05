@@ -17,19 +17,14 @@ func main() {
 	err := settings.JsdrSettings.Load()
 
 	// Set up program logging.
-	err1 := soapylogging.CreateSoapyLogfileName(settings.JsdrSettings.Logging.LoggingFile)
-	if err1 == nil {
-		soapylogging.SoapyLoggingActive = true
-		sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
-		sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
-		sdrlogger.Log(sdrlogger.Info, "jsdr Logging initialized")
-		if err != nil {
-			sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Unable to load settings file:\n    %v", err))
-		}
-	} else {
-		fmt.Printf("%v\n", err1)
-	}
+	soapylogging.SoapyLoggingActive = true
+	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
+	sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
+	sdrlogger.Log(sdrlogger.Info, "jsdr Logging initialized")
+	if err != nil {
+		sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Unable to load settings file:\n    %v", err))
 
+	// Create and show program GUI
 	sdrApp := app.New()
 	mainWindow := jsdrgui.NewMainWindow(sdrApp)
 	mainWindow.Resize(fyne.NewSize(800, 300))

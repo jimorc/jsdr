@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
@@ -12,6 +13,9 @@ import (
 //
 // The first thing that the program should do is initialize this variable by calling settings.NewSettings().
 var JsdrSettings *Settings
+
+// SettingsMutex is used to control access to the JsdrSettings struct
+var SettingsMutex sync.Mutex
 
 // LoggingSettings contains SDRLogging related settings.
 type LoggingSettings struct {
@@ -28,14 +32,14 @@ type Settings struct {
 func NewSettings() *Settings {
 	var settings Settings
 	settings.Logging.LoggingFile = os.Getenv("HOME") + "/jsdr.log"
-	settings.Logging.LoggingLevel = sdrlogger.Info
+	settings.Logging.LoggingLevel = sdrlogger.Debug
 
 	return &settings
 }
 
 // Load opens the JSON formatted file *filename* and unmarshals it into the Settings struct.
 func (s *Settings) Load() error {
-	file, err := os.Open(JsdrSettings.Logging.LoggingFile)
+	file, err := os.Open("JsdrSettings.Logging.LoggingFile")
 	if err != nil {
 		return err
 	}

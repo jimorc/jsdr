@@ -22,12 +22,11 @@ type loggingFileNameEntry struct {
 
 var loggingFileName *loggingFileNameEntry
 var loggingLevelSelect *widget.Select
+var loggingPopUp = modalPopUp{}
 
 func newLoggingFileNameEntry() *loggingFileNameEntry {
 	fileNameEntry := loggingFileNameEntry{entry: widget.NewEntry()}
 	fileNameEntry.entry.SetText(settings.JsdrSettings.Logging.LoggingFile)
-	fileNameEntry.entry.OnSubmitted = loggingFileNameSubmitted
-	fileNameEntry.entry.OnChanged = fileNameEntry.loggingFileNameChanged
 	fileNameEntry.entry.Validator = fileNameEntry.validateLoggingFileName
 	return &fileNameEntry
 }
@@ -44,11 +43,37 @@ func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
 	loggingLevelSelect = widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
 		"Trace", "SSI"}, nil)
 	loggingLevelSelect.SetSelectedIndex(int(settings.JsdrSettings.Logging.LoggingLevel - 1))
-	var loggingPopUp modalPopUp
 	container := container.NewGridWithColumns(2, loggingFileLabel, loggingFileName.entry, loggingLevelLabel, loggingLevelSelect,
-		widget.NewButton("Reset", resetLoggingValues), widget.NewButton("Close", loggingPopUp.closeLoggingPopUp))
+		widget.NewButton("Reset", resetLoggingValues), widget.NewButton("Accept", acceptChanges))
 	loggingPopUp.popUp = widget.NewModalPopUp(container, (*win).Canvas())
 	return loggingPopUp.popUp
+}
+
+// acceptChanges processes clicks on the "Accept" button.
+//
+// It saves the logging level to the JsdrSettings object, and, if the log file name is valid and not the same as the
+// value in JsdrSettings, then it saves the filename, renames the logging file, and closes the popup window.
+func acceptChanges() {
+	settings.SettingsMutex.Lock()
+	defer settings.SettingsMutex.Unlock()
+	settings.JsdrSettings.Logging.LoggingLevel = sdrlogger.SDRLogLevel(loggingLevelSelect.SelectedIndex() + 1)
+	sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
+	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging level to %v", settings.JsdrSettings.Logging.LoggingLevel))
+
+	logFile := loggingFileName.entry.Text
+	oldLogFile := settings.JsdrSettings.Logging.LoggingFile
+	if logFile != settings.JsdrSettings.Logging.LoggingFile {
+		if loggingFileName.validateLoggingFileName(logFile) == nil {
+			settings.JsdrSettings.Logging.LoggingFile = logFile
+			os.Rename(oldLogFile, logFile)
+			sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging file to %v", logFile))
+			loggingPopUp.popUp.Hide()
+			return
+		}
+	} else {
+		loggingPopUp.popUp.Hide()
+	}
+	return
 }
 
 // resetLoggingValues resets the loggingFileName entry and the loggingLevelSelect to the values in JsdrSettings.
@@ -57,14 +82,6 @@ func resetLoggingValues() {
 	loggingLevelSelect.SetSelectedIndex(int(settings.JsdrSettings.Logging.LoggingLevel - 1))
 	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("Logging values reset to: %v, %v",
 		loggingFileName.entry.Text, loggingLevelSelect.Selected))
-}
-
-func (entry *loggingFileNameEntry) loggingFileNameChanged(fileName string) {
-	fmt.Printf("In loggingFileNameChanged. FileName is: %v\n", fileName)
-}
-
-func loggingFileNameSubmitted(filename string) {
-	fmt.Printf("Submitted: File name: %v\n", filename)
 }
 
 // validateLoggingFileName validates the filename in loggingFileNameEntry
