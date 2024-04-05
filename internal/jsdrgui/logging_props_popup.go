@@ -3,10 +3,12 @@ package jsdrgui
 import (
 	"fmt"
 	"internal/settings"
+	"os"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
 type modalPopUp struct {
@@ -46,7 +48,6 @@ func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
 
 func (entry *loggingFileNameEntry) loggingFileNameChanged(fileName string) {
 	fmt.Printf("In loggingFileNameChanged. FileName is: %v\n", fileName)
-	// entry.entry.Validate()   // not needed
 }
 
 func loggingFileNameSubmitted(filename string) {
@@ -55,9 +56,24 @@ func loggingFileNameSubmitted(filename string) {
 
 func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) error {
 	fmt.Println("In validateLoggingFileName")
-	err := fmt.Errorf("validation error")
-	//	entry.entry.SetValidationError(err) // this has no effect
-	return err
+	fileName := entry.entry.Text
+	if fileName == settings.JsdrSettings.Logging.LoggingFile {
+		return nil
+	}
+	file, err := os.OpenFile(fileName, os.O_RDWR, 0644)
+	if err != nil {
+		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - OpenFile error: %v", err))
+		file, err = os.Create(fileName)
+		if err != nil {
+			sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("validateLoggingFileName - File Create error: %v", err))
+			return err
+		}
+		file.Close()
+		os.Remove(fileName)
+		return nil
+	}
+	file.Close()
+	return nil
 }
 
 // loggingLevelSelectChanged is called whenever the logging level in the logging popup is changed.
