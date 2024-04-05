@@ -13,26 +13,55 @@ type modalPopUp struct {
 	popUp *widget.PopUp
 }
 
+type loggingFileNameEntry struct {
+	entry *widget.Entry
+}
+
+func newLoggingFileNameEntry() *loggingFileNameEntry {
+	fileNameEntry := loggingFileNameEntry{entry: widget.NewEntry()}
+	fileNameEntry.entry.SetText(settings.JsdrSettings.Logging.LoggingFile)
+	fileNameEntry.entry.OnSubmitted = loggingFileNameSubmitted
+	fileNameEntry.entry.OnChanged = fileNameEntry.loggingFileNameChanged
+	fileNameEntry.entry.Validator = fileNameEntry.validateLoggingFileName
+	return &fileNameEntry
+}
+
 // newSDRLoggerSettingsPopUp creates the logging modal popup.
 // The return value is a pointer to the modal popup. This popup is displayed over the window specified in the
 // calling parameter when popup.Show() is called.
 // The popup is used to review and change logging parameters such as the name of the logging file and the the logging level.
 func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
-	loggingFileName := widget.NewEntry()
-	loggingFileName.SetText(settings.JsdrSettings.Logging.LoggingFile)
+	loggingFileName := newLoggingFileNameEntry()
+
 	loggingFileLabel := widget.NewLabel("SDR Logging File Name:")
 	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
 	loggingLevelSelect := widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
 		"Trace", "SSI"}, loggingLevelSelectChanged)
 	var loggingPopUp modalPopUp
-	container := container.NewGridWithColumns(2, loggingFileLabel, loggingFileName, loggingLevelLabel, loggingLevelSelect,
+	container := container.NewGridWithColumns(2, loggingFileLabel, loggingFileName.entry, loggingLevelLabel, loggingLevelSelect,
 		widget.NewLabel(""), widget.NewButton("Close", loggingPopUp.closeLoggingPopUp))
 	loggingPopUp.popUp = widget.NewModalPopUp(container, (*win).Canvas())
 	return loggingPopUp.popUp
 }
 
+func (entry *loggingFileNameEntry) loggingFileNameChanged(fileName string) {
+	fmt.Printf("In loggingFileNameChanged. FileName is: %v\n", fileName)
+	// entry.entry.Validate()   // not needed
+}
+
+func loggingFileNameSubmitted(filename string) {
+	fmt.Printf("Submitted: File name: %v\n", filename)
+}
+
+func (entry *loggingFileNameEntry) validateLoggingFileName(filename string) error {
+	fmt.Println("In validateLoggingFileName")
+	err := fmt.Errorf("validation error")
+	//	entry.entry.SetValidationError(err) // this has no effect
+	return err
+}
+
 // loggingLevelSelectChanged is called whenever the logging level in the logging popup is changed.
-// The parameter is the new logging level
+// The parameter is the new logging level.
 func loggingLevelSelectChanged(level string) {
 	fmt.Printf("Logging level changed to %v\n", level)
 }
