@@ -23,6 +23,7 @@ func main() {
 	settings.JsdrSettings.Logging.LoggingFile = os.Getenv("HOME") + "/enumerate_sdrs.log"
 	settings.JsdrSettings.Logging.LoggingLevel = loggingLevel
 
+	soapylogging.CreateSoapyLogFile()
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
 	sdrlogger.SetLogLevel(loggingLevel)
 	sdrlogger.Log(sdrlogger.Info, "Soapy SDR")

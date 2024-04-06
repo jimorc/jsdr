@@ -18,6 +18,7 @@ func main() {
 
 	// Set up program logging.
 	soapylogging.SoapyLoggingActive = true
+	soapylogging.CreateSoapyLogFile()
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
 	sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
 	sdrlogger.Log(sdrlogger.Info, "jsdr Logging initialized")

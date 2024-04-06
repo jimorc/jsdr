@@ -20,6 +20,21 @@ var SoapyLoggingMutex sync.Mutex
 // 2. You do not want to log anything.
 var SoapyLoggingActive bool = false
 
+// CreateSoapyLogFile creates the logging file.
+//
+// If the file already exists, it is truncated.
+// Returns error if the file cannot be created
+func CreateSoapyLogFile() error {
+	logFile, err := os.Create(settings.JsdrSettings.Logging.LoggingFile)
+	if err != nil {
+	}
+	err = logFile.Close()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
 	if !SoapyLoggingActive {
