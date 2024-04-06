@@ -9,6 +9,9 @@ import (
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
+// SettingsFileName is path to the program's setting file.
+var SettingsFileName = os.Getenv("HOME") + "/.jsdr"
+
 // JsdrSettings is a global variable that holds program settings.
 //
 // The first thing that the program should do is initialize this variable by calling settings.NewSettings().
@@ -39,13 +42,14 @@ func NewSettings() *Settings {
 
 // Load opens the JSON formatted file *filename* and unmarshals it into the Settings struct.
 func (s *Settings) Load() error {
-	file, err := os.Open("JsdrSettings.Logging.LoggingFile")
+	file, err := os.Open(SettingsFileName)
+
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	fInfo, err := os.Stat(JsdrSettings.Logging.LoggingFile)
+	fInfo, err := os.Stat(SettingsFileName)
 	if err != nil {
 		return err
 	}
@@ -61,7 +65,7 @@ func (s *Settings) Load() error {
 
 // Save writes the JSON-formatted settings to *filename*.
 func (s *Settings) Save() error {
-	file, err := os.Create(JsdrSettings.Logging.LoggingFile)
+	file, err := os.Create(SettingsFileName)
 	if err != nil {
 		return err
 	}
