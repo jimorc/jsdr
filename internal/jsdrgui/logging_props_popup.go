@@ -58,7 +58,8 @@ func acceptChanges() {
 	defer settings.SettingsMutex.Unlock()
 	settings.JsdrSettings.Logging.LoggingLevel = sdrlogger.SDRLogLevel(loggingLevelSelect.SelectedIndex() + 1)
 	sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
-	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging level to %v", settings.JsdrSettings.Logging.LoggingLevel))
+	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging level to %v",
+		soapylogging.LoggingLevelAsString(settings.JsdrSettings.Logging.LoggingLevel)))
 
 	logFile := loggingFileName.entry.Text
 	oldLogFile := settings.JsdrSettings.Logging.LoggingFile

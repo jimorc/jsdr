@@ -35,6 +35,20 @@ func CreateSoapyLogFile() error {
 	return nil
 }
 
+// LoggingLevelAsString converts the logging level from an int to its representative string value.
+//
+// If the logging level is outside its acceptable range (i.e. between Fatal and SSI), then "Unknown" is returned.
+func LoggingLevelAsString(level sdrlogger.SDRLogLevel) string {
+	// The level names must match the levels defined in go-soapy-sdr/pkg/sdrlogger/logger.go.
+	// Since the level starts at 1 (Fatal), "Unknown" is prepended to account for value 0.
+	levelStr := [10]string{"Unknown", "Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug", "Trace", "SSI"}
+	levelAsString := "Unknown"
+	if level >= 0 && level <= sdrlogger.SSI {
+		levelAsString = levelStr[level]
+	}
+	return levelAsString
+}
+
 // LogSoapy receives and prints Soapy messages to be logged to the log file
 func LogSoapy(level sdrlogger.SDRLogLevel, message string) {
 	if !SoapyLoggingActive {
@@ -51,27 +65,7 @@ func logMessage(level sdrlogger.SDRLogLevel, message string) {
 	settings.SettingsMutex.Lock()
 	defer settings.SettingsMutex.Unlock()
 
-	levelStr := "Unknown"
-	switch level {
-	case sdrlogger.Fatal:
-		levelStr = "Fatal"
-	case sdrlogger.Critical:
-		levelStr = "Critical"
-	case sdrlogger.Error:
-		levelStr = "Error"
-	case sdrlogger.Warning:
-		levelStr = "Warning"
-	case sdrlogger.Notice:
-		levelStr = "Notice"
-	case sdrlogger.Info:
-		levelStr = "Info"
-	case sdrlogger.Debug:
-		levelStr = "Debug"
-	case sdrlogger.Trace:
-		levelStr = "Trace"
-	case sdrlogger.SSI:
-		levelStr = "SSI"
-	}
+	levelStr := LoggingLevelAsString(level)
 	logFile, err := os.OpenFile(settings.JsdrSettings.Logging.LoggingFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatal(err)
