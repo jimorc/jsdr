@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
+	"internal/settings"
 	"internal/soapylogging"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
@@ -13,13 +15,17 @@ import (
 
 func main() {
 	soapylogging.SoapyLoggingActive = true
-	soapylogging.CreateSoapyLogfileName("enumerate_sdrs.log")
+	loggingLevel := sdrlogger.Debug
 
 	// Test log levels
+	settings.JsdrSettings = settings.NewSettings()
+	// Settings are different than for the jsdr app
+	settings.JsdrSettings.Logging.LoggingFile = os.Getenv("HOME") + "/enumerate_sdrs.log"
+	settings.JsdrSettings.Logging.LoggingLevel = loggingLevel
+
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
-	sdrlogger.SetLogLevel(sdrlogger.SSI)
+	sdrlogger.SetLogLevel(loggingLevel)
 	sdrlogger.Log(sdrlogger.Info, "Soapy SDR")
-	sdrlogger.Logf(sdrlogger.Info, "%v\n", "Demonstration")
 
 	sdrlogger.Log(sdrlogger.Fatal, "Testing Fatal logging level")
 	sdrlogger.Log(sdrlogger.Critical, "Testing Critical logging level")
