@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"strings"
+	"sync/atomic"
 
 	"internal/settings"
 	"internal/soapylogging"
@@ -14,14 +14,12 @@ import (
 )
 
 func main() {
-	soapylogging.SoapyLoggingActive = true
 	loggingLevel := sdrlogger.Debug
 
 	// Test log levels
 	settings.JsdrSettings = settings.NewSettings()
 	// Settings are different than for the jsdr app
-	settings.JsdrSettings.Logging.LoggingFile = os.Getenv("HOME") + "/enumerate_sdrs.log"
-	settings.JsdrSettings.Logging.LoggingLevel = loggingLevel
+	atomic.StoreInt64(&settings.JsdrSettings.LoggingLevel, int64(sdrlogger.Info))
 
 	soapylogging.CreateSoapyLogFile()
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
@@ -48,6 +46,7 @@ func main() {
 	}
 	if len(devices) == 0 {
 		sdrlogger.Logf(sdrlogger.Info, "No devices found!!")
+		fmt.Println("No devices found!")
 		return
 	}
 
@@ -505,9 +504,8 @@ func buildStreamFlagsString(flag int) string {
 	addFlagStringToStringBuilder(flag, "WaitTrigger", device.StreamFlagWaitTrigger, &haveFlag, &flagStringBuilder)
 	if flagStringBuilder.Len() > 0 {
 		return flagStringBuilder.String()
-	} else {
-		return "[none]"
 	}
+	return "[none]"
 }
 
 func buildDataLine(bufferSize uint, lineSize uint, startElement uint, data []int8) string {

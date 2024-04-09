@@ -5,6 +5,7 @@ import (
 	"internal/jsdrgui"
 	"internal/settings"
 	"internal/soapylogging"
+	"sync/atomic"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -17,10 +18,9 @@ func main() {
 	err := settings.JsdrSettings.Load()
 
 	// Set up program logging.
-	soapylogging.SoapyLoggingActive = true
 	soapylogging.CreateSoapyLogFile()
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
-	sdrlogger.SetLogLevel(settings.JsdrSettings.Logging.LoggingLevel)
+	sdrlogger.SetLogLevel(sdrlogger.SDRLogLevel(atomic.LoadInt64(&settings.JsdrSettings.LoggingLevel)))
 	sdrlogger.Log(sdrlogger.Info, "jsdr Logging initialized")
 	if err == nil {
 		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("Settings loaded from %v", settings.SettingsFileName))

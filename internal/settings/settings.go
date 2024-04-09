@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"sync"
+	"sync/atomic"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
@@ -17,25 +17,15 @@ var SettingsFileName = os.Getenv("HOME") + "/.jsdr"
 // The first thing that the program should do is initialize this variable by calling settings.NewSettings().
 var JsdrSettings *Settings
 
-// SettingsMutex is used to control access to the JsdrSettings struct
-var SettingsMutex sync.Mutex
-
-// LoggingSettings contains SDRLogging related settings.
-type LoggingSettings struct {
-	LoggingFile  string                `json:"logging_file,omitempty"`
-	LoggingLevel sdrlogger.SDRLogLevel `json:"logging_level,omitempty"`
-}
-
 // Settings contains values that are shared between executions of go_sdr.
 type Settings struct {
-	Logging LoggingSettings `json:"logging,omitempty"`
+	LoggingLevel int64 `json:"logging_level,omitempty"`
 }
 
 // NewSettings creates a new default Settings struct.
 func NewSettings() *Settings {
 	var settings Settings
-	settings.Logging.LoggingFile = os.Getenv("HOME") + "/jsdr.log"
-	settings.Logging.LoggingLevel = sdrlogger.Debug
+	atomic.StoreInt64(&settings.LoggingLevel, int64(sdrlogger.Debug))
 
 	return &settings
 }
