@@ -10,6 +10,15 @@ import (
 
 var loggingFileName string = os.Getenv("HOME") + "/jsdr.log"
 
+// ChangeLoggingFileName changes the name of the logging file to the file specified by the parameter.
+//
+// Also creates the file to ensure that the file name is valid.
+func ChangeLoggingFileName(newFileName string) error {
+	loggingFileName = newFileName
+	return CreateSoapyLogFile()
+
+}
+
 // CreateSoapyLogFile creates the logging file.
 //
 // If the file already exists, it is truncated.
@@ -17,6 +26,7 @@ var loggingFileName string = os.Getenv("HOME") + "/jsdr.log"
 func CreateSoapyLogFile() error {
 	logFile, err := os.Create(loggingFileName)
 	if err != nil {
+		return err
 	}
 	err = logFile.Close()
 	if err != nil {

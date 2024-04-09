@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"sync/atomic"
 
@@ -21,7 +22,12 @@ func main() {
 	// Settings are different than for the jsdr app
 	atomic.StoreInt64(&settings.JsdrSettings.LoggingLevel, int64(sdrlogger.Info))
 
-	soapylogging.CreateSoapyLogFile()
+	logFile := os.Getenv("HOME") + "/enumerate_sdrs.log"
+	err := soapylogging.ChangeLoggingFileName(logFile)
+	if err != nil {
+		log.Fatalf("Could not create the logging file: %v", logFile)
+	}
+	//	soapylogging.CreateSoapyLogFile()
 	sdrlogger.RegisterLogHandler(soapylogging.LogSoapy)
 	sdrlogger.SetLogLevel(loggingLevel)
 	sdrlogger.Log(sdrlogger.Info, "Soapy SDR")
