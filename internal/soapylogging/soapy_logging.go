@@ -21,8 +21,10 @@ func ChangeLoggingFileName(newFileName string) error {
 
 // CreateSoapyLogFile creates the logging file.
 //
+// It is not necessary to call this function if ChangeLoggingFileName is called first.
+//
 // If the file already exists, it is truncated.
-// Returns error if the file cannot be created
+// Returns error if the file cannot be created.
 func CreateSoapyLogFile() error {
 	logFile, err := os.Create(loggingFileName)
 	if err != nil {
