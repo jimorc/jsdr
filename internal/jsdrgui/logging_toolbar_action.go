@@ -28,7 +28,3 @@ func (loggingAction *loggingToolbarAction) loggingToolbarActionActivated() {
 
 	fmt.Println("In settingsToolbarActionActivated")
 }
-
-func (loggingAction *loggingToolbarAction) loggingConfirmCallback() {
-	fmt.Println("In loggingConfirmCallback")
-}
