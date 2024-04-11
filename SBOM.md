@@ -21,14 +21,16 @@ are called from gosdr code.
 ## Icons
 
 <table>
-<tr><th>Icon</th><th>License</th><th>Atrtribution</th></tr>
+<tr><th>Icon</th><th>License</th><th>Atrtribution</th><th>Comments</th></tr>
 <tr>
-<td> <img src="cmd/jsdr/images/logging.svg" width=50px height=50px> </td>
+<td> <img src="cmd/jsdr/images/settings.svg" width=50px height=50px> </td>
 <td> Free for commercial or personal use </td>
 <td> iconpacks.net </td>
+<td> Used as a base for one or more icons used in jsdr</td>
 </tr>
 <tr>
 <td> <img src="cmd/jsdr/images/radio.svg" width=50px height=50px> </td>
 <td> <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</td>
 <td> Techlo9 - Line Icons Family - SEO and Internet Marketing pack </td>
+<td/>
 </tr>
