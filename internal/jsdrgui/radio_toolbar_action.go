@@ -22,5 +22,7 @@ func NewRadioToolbarAction(win *fyne.Window) *widget.ToolbarAction {
 func (radioAction *radioToolbarAction) radioToolbarActionActivated() {
 
 	radioPopup := newRadioPopUp(radioAction.parentWindow)
-	radioPopup.Show()
+	if radioPopup != nil {
+		radioPopup.Show()
+	}
 }
