@@ -26,7 +26,7 @@ var radioPopup = radioPopUp{}
 // newRadioPopUp creates the logging modal popup.
 // The return value is a pointer to the modal popup. This popup is displayed over the window specified in the
 // calling parameter when popup.Show() is called.
-// The popup is used to select an SDR device and some of its parame.ters.
+// The popup is used to select an SDR device and some of its parameters.
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
 func newRadioPopUp(win *fyne.Window) *widget.PopUp {
 	radioLabel := widget.NewLabel("Radio:")
