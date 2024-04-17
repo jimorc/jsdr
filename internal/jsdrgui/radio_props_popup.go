@@ -61,6 +61,10 @@ func newRadioPopUp(win *fyne.Window) *widget.PopUp {
 // acceptChanges processes clicks on the "Accept" button.
 func radioAcceptChanges() {
 	sdrlogger.Log(sdrlogger.Trace, "In radioAcceptChanges")
+	if radioSelect.Selected != settings.JsdrSettings.Sdr {
+		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
+		settings.JsdrSettings.Sdr = radioSelect.Selected
+	}
 	radioPopup.closeRadioPopUp()
 }
 
@@ -80,9 +84,6 @@ func (rPopUp *radioPopUp) closeRadioPopUp() {
 // radioSelected retrieves SDR properties for display when an SDR is selected.
 func (rPopUp *radioPopUp) radioSelected(sdr string) {
 	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
-	if sdr != settings.JsdrSettings.Sdr {
-		settings.JsdrSettings.Sdr = sdr
-	}
 	deviceArgs := make([]map[string]string, 1)
 	deviceArgs[0] = map[string]string{
 		"label": sdr,
