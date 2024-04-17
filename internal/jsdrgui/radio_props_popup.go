@@ -2,6 +2,7 @@ package jsdrgui
 
 import (
 	"fmt"
+	"internal/settings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -30,7 +31,7 @@ var radioPopup = radioPopUp{}
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
 func newRadioPopUp(win *fyne.Window) *widget.PopUp {
 	radioLabel := widget.NewLabel("Radio:")
-	radioSelect = widget.NewSelect([]string{""}, nil)
+	radioSelect = widget.NewSelect([]string{""}, radioSelected)
 	container := container.NewGridWithColumns(2, radioLabel, radioSelect,
 		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
 	radioPopup.popUp = widget.NewModalPopUp(container, (*win).Canvas())
@@ -48,7 +49,11 @@ func newRadioPopUp(win *fyne.Window) *widget.PopUp {
 		labels = append(labels, radio["label"])
 	}
 	radioSelect.SetOptions(labels)
-	radioSelect.SetSelectedIndex(0)
+	if len(radios) == 1 {
+		radioSelect.SetSelectedIndex(0)
+	} else if len(settings.JsdrSettings.Sdr) > 0 {
+		radioSelect.SetSelected(settings.JsdrSettings.Sdr)
+	}
 	return radioPopup.popUp
 }
 
@@ -69,4 +74,12 @@ func rescanRadioValues() {
 func (rPopUp *radioPopUp) closeRadioPopUp() {
 	sdrlogger.Log(sdrlogger.Trace, "Closing radio popup")
 	rPopUp.popUp.Hide()
+}
+
+// radioSelected retrieves SDR properties for display when an SDR is selected.
+func radioSelected(sdr string) {
+	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
+	if sdr != settings.JsdrSettings.Sdr {
+		settings.JsdrSettings.Sdr = sdr
+	}
 }

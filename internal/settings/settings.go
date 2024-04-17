@@ -20,12 +20,14 @@ var JsdrSettings *Settings
 // Settings contains values that are shared between executions of go_sdr.
 type Settings struct {
 	LoggingLevel int64 `json:"logging_level,omitempty"`
+	Sdr          string
 }
 
 // NewSettings creates a new default Settings struct.
 func NewSettings() *Settings {
 	var settings Settings
 	atomic.StoreInt64(&settings.LoggingLevel, int64(sdrlogger.Debug))
+	settings.Sdr = ""
 
 	return &settings
 }
