@@ -13,8 +13,8 @@ import (
 )
 
 type radioPopUp struct {
-	popUp *widget.PopUp
-	// parent *fyne.Window
+	popUp  *widget.PopUp
+	parent *fyne.Window
 }
 
 type radioEntry struct {
@@ -30,8 +30,9 @@ var radioPopup = radioPopUp{}
 // The popup is used to select an SDR device and some of its parameters.
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
 func newRadioPopUp(win *fyne.Window) *widget.PopUp {
+	radioPopup.parent = win
 	radioLabel := widget.NewLabel("Radio:")
-	radioSelect = widget.NewSelect([]string{""}, radioSelected)
+	radioSelect = widget.NewSelect([]string{""}, radioPopup.radioSelected)
 	container := container.NewGridWithColumns(2, radioLabel, radioSelect,
 		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
 	radioPopup.popUp = widget.NewModalPopUp(container, (*win).Canvas())
@@ -77,9 +78,22 @@ func (rPopUp *radioPopUp) closeRadioPopUp() {
 }
 
 // radioSelected retrieves SDR properties for display when an SDR is selected.
-func radioSelected(sdr string) {
+func (rPopUp *radioPopUp) radioSelected(sdr string) {
 	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
 	if sdr != settings.JsdrSettings.Sdr {
 		settings.JsdrSettings.Sdr = sdr
 	}
+	deviceArgs := make([]map[string]string, 1)
+	deviceArgs[0] = map[string]string{
+		"label": sdr,
+	}
+	_, err := device.MakeList(deviceArgs)
+	if err != nil {
+		sdrlogger.Logf(sdrlogger.Error, "Error retrieving the selected SDR: %v", err)
+		rPopUp.popUp.Hide()
+		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
+			*rPopUp.parent)
+
+	}
+
 }
