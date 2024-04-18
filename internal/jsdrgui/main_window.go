@@ -22,8 +22,8 @@ func NewMainWindow(sdrApp fyne.App) fyne.Window {
 // mainWindowClosing
 func mainWindowClosing() {
 	fmt.Println("In mainWindowClosing")
-	if radioWindow != nil {
-		radioWindow.window.Close()
+	if actionWin != nil {
+		actionWin.window.Close()
 	}
 	err := settings.JsdrSettings.Save()
 	if err == nil {
