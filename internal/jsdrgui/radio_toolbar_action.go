@@ -9,7 +9,6 @@ import (
 type radioToolbarAction struct {
 	parentWindow *fyne.Window
 	action       *widget.ToolbarAction
-	disabled     bool
 }
 
 // radioAction encapsulates the radio toolbar action.
@@ -18,7 +17,7 @@ var radioAction *radioToolbarAction
 // newRadioToolbarAction creates a RadioToolbarAction widget.
 func newRadioToolbarAction(win *fyne.Window) *radioToolbarAction {
 	radioIcon := canvas.NewImageFromResource(resourceRadioSvg).Resource
-	radioAction = &radioToolbarAction{parentWindow: win, disabled: false}
+	radioAction = &radioToolbarAction{parentWindow: win}
 	radioAction.action = widget.NewToolbarAction(radioIcon, radioAction.radioToolbarActionActivated)
 	return radioAction
 }
