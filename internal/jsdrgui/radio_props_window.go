@@ -12,36 +12,38 @@ import (
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
-type radioPopUp struct {
-	popUp  *widget.PopUp
-	parent *fyne.Window
+type radioWindow struct {
+	Window fyne.Window
 }
 
 type radioEntry struct {
 	entry *widget.Entry
 }
 
-var radioSelect *widget.Select
-var radioPopup = radioPopUp{}
+var radioSelect = widget.NewSelect([]string{""}, RadioWin.radioSelected)
 
-// newRadioPopUp creates the logging modal popup.
-// The return value is a pointer to the modal popup. This popup is displayed over the window specified in the
-// calling parameter when popup.Show() is called.
-// The popup is used to select an SDR device and some of its parameters.
+// RadioWin is the window containing the radio settings.
+var RadioWin *radioWindow = nil
+
+// newRadioWindow creates the radio popup window
+// The return value is a pointer to the radioWindow struct. The window is displayed over the window specified in the
+// calling parameter when window.Show() is called.
+// The window is used to select an SDR device and some of its parameters.
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
-func newRadioPopUp(win *fyne.Window) *widget.PopUp {
-	radioPopup.parent = win
-	radioLabel := widget.NewLabel("Radio:")
-	radioSelect = widget.NewSelect([]string{""}, radioPopup.radioSelected)
+func newRadioWindow(parent *fyne.Window) *radioWindow {
+	RadioWin = &radioWindow{}
+	RadioWin.Window = SdrApp.NewWindow("Radio Properties")
+	radioLabel := widget.NewLabel("Radio")
 	container := container.NewGridWithColumns(2, radioLabel, radioSelect,
 		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
-	radioPopup.popUp = widget.NewModalPopUp(container, (*win).Canvas())
+	RadioWin.Window.SetContent(container)
+	RadioWin.Window.SetOnClosed(closeRadioWindow)
 
 	radios := device.Enumerate(nil)
 	if len(radios) == 0 {
 		sdrlogger.Logf(sdrlogger.Trace, "No radios found")
 		dialog.ShowInformation("No Radios", "No SDR radios found.\nPlease attach an SDR and click\nthe Radio toolbar item again.",
-			*win)
+			*parent)
 		return nil
 	}
 	var labels []string
@@ -55,7 +57,7 @@ func newRadioPopUp(win *fyne.Window) *widget.PopUp {
 	} else if len(settings.JsdrSettings.Sdr) > 0 {
 		radioSelect.SetSelected(settings.JsdrSettings.Sdr)
 	}
-	return radioPopup.popUp
+	return RadioWin
 }
 
 // acceptChanges processes clicks on the "Accept" button.
@@ -65,7 +67,7 @@ func radioAcceptChanges() {
 		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
 		settings.JsdrSettings.Sdr = radioSelect.Selected
 	}
-	radioPopup.closeRadioPopUp()
+	RadioWin.Window.Close()
 }
 
 // resetRadioValues resets the radio entry.
@@ -75,14 +77,13 @@ func rescanRadioValues() {
 		radioSelect.Selected))
 }
 
-// closeLoggingPopUp closes the logging popup window.
-func (rPopUp *radioPopUp) closeRadioPopUp() {
-	sdrlogger.Log(sdrlogger.Trace, "Closing radio popup")
-	rPopUp.popUp.Hide()
+// closeRadioWindow closes the radio window.
+func closeRadioWindow() {
+	RadioWin = nil
 }
 
 // radioSelected retrieves SDR properties for display when an SDR is selected.
-func (rPopUp *radioPopUp) radioSelected(sdr string) {
+func (radioWin *radioWindow) radioSelected(sdr string) {
 	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
 	deviceArgs := make([]map[string]string, 1)
 	deviceArgs[0] = map[string]string{
@@ -91,17 +92,17 @@ func (rPopUp *radioPopUp) radioSelected(sdr string) {
 	devs, err := device.MakeList(deviceArgs)
 	if err != nil {
 		sdrlogger.Logf(sdrlogger.Error, "Error retrieving the selected SDR: %v", err)
-		rPopUp.popUp.Hide()
+		radioWin.Window.Hide()
 		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
-			*rPopUp.parent)
+			radioWin.Window)
 	}
 	if len(devs) > 1 {
 		sdrlogger.Logf(sdrlogger.Error, fmt.Sprintf("More than one SDR retrieved for the selected SDR: %v", deviceArgs[0]["label"]))
-		rPopUp.popUp.Hide()
+		radioWin.Window.Hide()
 		dialog.ShowInformation("Multiple SDRs Found",
 			"More than one SDR retrieved for the selected item.\nSee documentation for information about how SDRs are "+
 				"distinguished.\nIf this does not explain the problem,\nfile a bug report and include the contents of the jsdr.log file.",
-			*rPopUp.parent)
+			radioWin.Window)
 	}
 
 }

@@ -11,18 +11,23 @@ type radioToolbarAction struct {
 	action       *widget.ToolbarAction
 }
 
+// RadioAction encapsulates the radio toolbar action.
+var RadioAction = radioToolbarAction{}
+
 // NewRadioToolbarAction creates a RadioToolbarAction widget.
 func NewRadioToolbarAction(win *fyne.Window) *widget.ToolbarAction {
 	radioIcon := canvas.NewImageFromResource(resourceRadioSvg).Resource
-	radioAction := radioToolbarAction{parentWindow: win}
-	radioAction.action = widget.NewToolbarAction(radioIcon, radioAction.radioToolbarActionActivated)
-	return radioAction.action
+	RadioAction := radioToolbarAction{parentWindow: win}
+	RadioAction.action = widget.NewToolbarAction(radioIcon, RadioAction.radioToolbarActionActivated)
+	return RadioAction.action
 }
 
 func (radioAction *radioToolbarAction) radioToolbarActionActivated() {
-
-	radioPopup := newRadioPopUp(radioAction.parentWindow)
-	if radioPopup != nil {
-		radioPopup.Show()
+	// The following test is a temporary fix to disable the Radio toolbaraction until fyne issue #2306 is closed.
+	if RadioWin != nil {
+		return
 	}
+
+	RadioWin = newRadioWindow(radioAction.parentWindow)
+	RadioWin.Window.Show()
 }
