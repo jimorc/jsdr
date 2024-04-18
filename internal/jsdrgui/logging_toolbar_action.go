@@ -27,14 +27,14 @@ func newLoggingToolbarAction(win *fyne.Window) *loggingToolbarAction {
 
 func (loggingAction *loggingToolbarAction) loggingToolbarActionActivated() {
 	if loggingAction.disabled {
-		if loggingWin != nil {
-			loggingWin.window.Show()
+		if loggingWindow != nil {
+			loggingWindow.window.Show()
 		}
 		return
 	}
 
-	loggingWin := newSDRLoggerSettingsWindow()
-	loggingWin.window.Show()
+	loggingWindow := newSDRLoggerSettingsWindow()
+	loggingWindow.window.Show()
 	disableMainToolbar()
 
 	fmt.Println("In settingsToolbarActionActivated")

@@ -5,6 +5,12 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+type actionWindow struct {
+	window fyne.Window
+}
+
+var actionWin *actionWindow = nil
+
 var mainToolbar *widget.Toolbar = nil
 var startStop = NewStartStopToolbarAction()
 

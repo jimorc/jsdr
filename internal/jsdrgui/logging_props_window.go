@@ -6,29 +6,24 @@ import (
 	"internal/soapylogging"
 	"sync/atomic"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
-
-type loggingWindow struct {
-	window fyne.Window
-}
 
 type loggingFileNameEntry struct {
 	entry *widget.Entry
 }
 
 var loggingLevelSelect *widget.Select
-var loggingWin *loggingWindow = nil
+var loggingWindow *actionWindow = nil
 
 // newSDRLoggerSettingsWindow creates the logging window.
 // The return value is a pointer to the logging window. This window is displayed over the window specified in the
 // calling parameter when window.Show() is called.
 // The window is used to review and change logging parameters such as the logging level.
-func newSDRLoggerSettingsWindow() *loggingWindow {
-	loggingWin = &loggingWindow{}
+func newSDRLoggerSettingsWindow() *actionWindow {
+	loggingWindow = &actionWindow{}
 	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
 	loggingLevelSelect = widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
 		"Trace", "SSI"}, nil)
@@ -36,10 +31,10 @@ func newSDRLoggerSettingsWindow() *loggingWindow {
 	container := container.NewGridWithColumns(2, loggingLevelLabel, loggingLevelSelect,
 		widget.NewButton("Reset", resetLoggingValues), widget.NewButton("Accept", acceptChanges))
 
-	loggingWin.window = SdrApp.NewWindow("Logging Settings")
-	loggingWin.window.SetContent(container)
-	loggingWin.window.SetOnClosed(closeLoggingWindow)
-	return loggingWin
+	loggingWindow.window = SdrApp.NewWindow("Logging Settings")
+	loggingWindow.window.SetContent(container)
+	loggingWindow.window.SetOnClosed(closeLoggingWindow)
+	return loggingWindow
 }
 
 // acceptChanges processes clicks on the "Accept" button.
@@ -51,7 +46,7 @@ func acceptChanges() {
 	atomic.StoreInt64(&settings.JsdrSettings.LoggingLevel, level)
 	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging level to %v",
 		soapylogging.LoggingLevelAsString(sdrlogger.SDRLogLevel(level))))
-	loggingWin.window.Close()
+	loggingWindow.window.Close()
 }
 
 // resetLoggingValues resets the loggingFileName entry and the loggingLevelSelect to the values in JsdrSettings.
@@ -63,6 +58,6 @@ func resetLoggingValues() {
 
 // closeLoggingWindow closes the logging window.
 func closeLoggingWindow() {
-	loggingWin = nil
+	loggingWindow = nil
 	enableMainToolbar()
 }
