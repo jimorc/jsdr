@@ -27,15 +27,15 @@ func newRadioToolbarAction(win *fyne.Window) *radioToolbarAction {
 func (radioAction *radioToolbarAction) radioToolbarActionActivated() {
 	// The following test is a temporary fix to disable the Radio toolbaraction until fyne issue #2306 is closed.
 	if RadioAction.disabled {
-		if RadioWin != nil {
-			RadioWin.Window.Show()
+		if radioWin != nil {
+			radioWin.Window.Show()
 		}
 		return
 	}
 
 	// action not disabled and no radio window exists, so create and show it.
-	RadioWin = newRadioWindow(radioAction.parentWindow)
-	RadioWin.Window.Show()
+	radioWin = newRadioWindow(radioAction.parentWindow)
+	radioWin.Window.Show()
 	disableMainToolbar()
 }
 

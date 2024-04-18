@@ -20,10 +20,10 @@ type radioEntry struct {
 	entry *widget.Entry
 }
 
-var radioSelect = widget.NewSelect([]string{""}, RadioWin.radioSelected)
+var radioSelect = widget.NewSelect([]string{""}, radioWin.radioSelected)
 
-// RadioWin is the window containing the radio settings.
-var RadioWin *radioWindow = nil
+// radioWin is the window containing the radio settings.
+var radioWin *radioWindow = nil
 
 // newRadioWindow creates the radio popup window
 // The return value is a pointer to the radioWindow struct. The window is displayed over the window specified in the
@@ -31,13 +31,13 @@ var RadioWin *radioWindow = nil
 // The window is used to select an SDR device and some of its parameters.
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
 func newRadioWindow(parent *fyne.Window) *radioWindow {
-	RadioWin = &radioWindow{}
-	RadioWin.Window = SdrApp.NewWindow("Radio Properties")
+	radioWin = &radioWindow{}
+	radioWin.Window = SdrApp.NewWindow("Radio Properties")
 	radioLabel := widget.NewLabel("Radio")
 	container := container.NewGridWithColumns(2, radioLabel, radioSelect,
 		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
-	RadioWin.Window.SetContent(container)
-	RadioWin.Window.SetOnClosed(closeRadioWindow)
+	radioWin.Window.SetContent(container)
+	radioWin.Window.SetOnClosed(closeRadioWindow)
 
 	radios := device.Enumerate(nil)
 	if len(radios) == 0 {
@@ -57,7 +57,7 @@ func newRadioWindow(parent *fyne.Window) *radioWindow {
 	} else if len(settings.JsdrSettings.Sdr) > 0 {
 		radioSelect.SetSelected(settings.JsdrSettings.Sdr)
 	}
-	return RadioWin
+	return radioWin
 }
 
 // acceptChanges processes clicks on the "Accept" button.
@@ -67,7 +67,7 @@ func radioAcceptChanges() {
 		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
 		settings.JsdrSettings.Sdr = radioSelect.Selected
 	}
-	RadioWin.Window.Close()
+	radioWin.Window.Close()
 }
 
 // resetRadioValues resets the radio entry.
@@ -79,7 +79,7 @@ func rescanRadioValues() {
 
 // closeRadioWindow closes the radio window.
 func closeRadioWindow() {
-	RadioWin = nil
+	radioWin = nil
 	enableMainToolbar()
 }
 
