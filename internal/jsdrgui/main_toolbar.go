@@ -16,8 +16,8 @@ var startStop = NewStartStopToolbarAction()
 
 // newMainToolbar creates the main toolbar
 func newMainToolbar(mainWin *fyne.Window) *widget.Toolbar {
-	loggingAction = newLoggingToolbarAction(mainWin)
-	radioAction = newRadioToolbarAction(mainWin)
+	loggingAction := newLoggingToolbarAction(mainWin)
+	radioAction := newRadioToolbarAction(mainWin)
 	mainToolbar = widget.NewToolbar(radioAction.action, startStop, loggingAction.action)
 	return mainToolbar
 }

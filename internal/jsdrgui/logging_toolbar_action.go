@@ -13,13 +13,10 @@ type loggingToolbarAction struct {
 	action       *widget.ToolbarAction
 }
 
-// loggingAction encapsulates the logging toolbar action.
-var loggingAction *loggingToolbarAction
-
 // newLoggingToolbarAction creates a SettingsToolbarAction widget.
 func newLoggingToolbarAction(win *fyne.Window) *loggingToolbarAction {
 	loggingIcon := canvas.NewImageFromResource(resourceLogsettingsSvg).Resource
-	loggingAction = &loggingToolbarAction{parentWindow: win}
+	loggingAction := &loggingToolbarAction{parentWindow: win}
 	loggingAction.action = widget.NewToolbarAction(loggingIcon, loggingAction.loggingToolbarActionActivated)
 	return loggingAction
 }
