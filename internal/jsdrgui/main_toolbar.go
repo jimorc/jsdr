@@ -8,12 +8,11 @@ import (
 var mainToolbar *widget.Toolbar = nil
 var startStop = NewStartStopToolbarAction()
 var loggingAction *widget.ToolbarAction = nil
-var radioAction *radioToolbarAction = nil
 
 // newMainToolbar creates the main toolbar
 func newMainToolbar(mainWin *fyne.Window) *widget.Toolbar {
 	loggingAction = NewLoggingToolbarAction(mainWin)
-	radioAction := newRadioToolbarAction(mainWin)
+	radioAction = newRadioToolbarAction(mainWin)
 	mainToolbar = widget.NewToolbar((*radioAction).action, startStop, loggingAction)
 	return mainToolbar
 }
