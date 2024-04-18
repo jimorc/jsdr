@@ -80,6 +80,7 @@ func rescanRadioValues() {
 // closeRadioWindow closes the radio window.
 func closeRadioWindow() {
 	RadioWin = nil
+	enableMainToolbar()
 }
 
 // radioSelected retrieves SDR properties for display when an SDR is selected.

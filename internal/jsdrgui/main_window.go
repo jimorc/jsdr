@@ -5,19 +5,16 @@ import (
 	"internal/settings"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
+var mainWin fyne.Window = nil
+
 // NewMainWindow creates the main window for the go_sdr app.
 func NewMainWindow(sdrApp fyne.App) fyne.Window {
-	mainWin := sdrApp.NewWindow("jsdr")
-	startStop := NewStartStopToolbarAction()
-	loggingToolbarAction := NewLoggingToolbarAction(&mainWin)
-	radioToolbarAction := NewRadioToolbarAction(&mainWin)
-	toolBar := widget.NewToolbar(radioToolbarAction, startStop, loggingToolbarAction)
-
-	mainWin.SetContent(toolBar)
+	mainWin = sdrApp.NewWindow("jsdr")
+	mainToolBar := newMainToolbar(&mainWin)
+	mainWin.SetContent(mainToolBar)
 	mainWin.SetOnClosed(mainWindowClosing)
 	return mainWin
 }

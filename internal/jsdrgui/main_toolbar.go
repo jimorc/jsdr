@@ -1,0 +1,31 @@
+package jsdrgui
+
+import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/widget"
+)
+
+var mainToolbar *widget.Toolbar = nil
+var startStop = NewStartStopToolbarAction()
+var loggingAction *widget.ToolbarAction = nil
+var radioAction *radioToolbarAction = nil
+
+// newMainToolbar creates the main toolbar
+func newMainToolbar(mainWin *fyne.Window) *widget.Toolbar {
+	loggingAction = NewLoggingToolbarAction(mainWin)
+	radioAction := newRadioToolbarAction(mainWin)
+	mainToolbar = widget.NewToolbar((*radioAction).action, startStop, loggingAction)
+	return mainToolbar
+}
+
+// disableMainToolbar disables each of the toolbar items in the toolbar.
+// This function should be called whenever a window is displayed over the main window.
+func disableMainToolbar() {
+	radioAction.disable()
+}
+
+// enableMainToolbar enables each of the toolbar items in the toolbar.
+// This function should be called whenever a window that is displayed over the main window is closed.
+func enableMainToolbar() {
+	radioAction.enable()
+}
