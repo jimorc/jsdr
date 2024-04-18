@@ -11,20 +11,41 @@ import (
 type loggingToolbarAction struct {
 	parentWindow *fyne.Window
 	action       *widget.ToolbarAction
+	disabled     bool
 }
 
-// NewLoggingToolbarAction creates a SettingsToolbarAction widget.
-func NewLoggingToolbarAction(win *fyne.Window) *widget.ToolbarAction {
+// radioAction encapsulates the radio toolbar action.
+var loggingAction *loggingToolbarAction
+
+// newLoggingToolbarAction creates a SettingsToolbarAction widget.
+func newLoggingToolbarAction(win *fyne.Window) *loggingToolbarAction {
 	loggingIcon := canvas.NewImageFromResource(resourceLogsettingsSvg).Resource
-	loggingAction := loggingToolbarAction{parentWindow: win}
+	loggingAction = &loggingToolbarAction{parentWindow: win, disabled: false}
 	loggingAction.action = widget.NewToolbarAction(loggingIcon, loggingAction.loggingToolbarActionActivated)
-	return loggingAction.action
+	return loggingAction
 }
 
 func (loggingAction *loggingToolbarAction) loggingToolbarActionActivated() {
+	if loggingAction.disabled {
+		if loggingWin != nil {
+			loggingWin.window.Show()
+		}
+		return
+	}
 
-	loggingPopup := newSDRLoggerSettingsPopUp(loggingAction.parentWindow)
-	loggingPopup.Show()
+	loggingWin := newSDRLoggerSettingsWindow()
+	loggingWin.window.Show()
+	disableMainToolbar()
 
 	fmt.Println("In settingsToolbarActionActivated")
+}
+
+// disable disables the logging toolbar action. This is used to prevent displaying multiple windows on top of the main window.
+func (loggingAction *loggingToolbarAction) disable() {
+	loggingAction.disabled = true
+}
+
+// enable enables the logging toolbar action.
+func (loggingAction *loggingToolbarAction) enable() {
+	loggingAction.disabled = false
 }

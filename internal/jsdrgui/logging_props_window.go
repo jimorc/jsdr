@@ -12,8 +12,8 @@ import (
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
-type modalPopUp struct {
-	popUp *widget.PopUp
+type loggingWindow struct {
+	window fyne.Window
 }
 
 type loggingFileNameEntry struct {
@@ -21,21 +21,25 @@ type loggingFileNameEntry struct {
 }
 
 var loggingLevelSelect *widget.Select
-var loggingPopUp = modalPopUp{}
+var loggingWin *loggingWindow = nil
 
-// newSDRLoggerSettingsPopUp creates the logging modal popup.
-// The return value is a pointer to the modal popup. This popup is displayed over the window specified in the
-// calling parameter when popup.Show() is called.
-// The popup is used to review and change logging parameters such as the name of the logging file and the the logging level.
-func newSDRLoggerSettingsPopUp(win *fyne.Window) *widget.PopUp {
+// newSDRLoggerSettingsWindow creates the logging window.
+// The return value is a pointer to the logging window. This window is displayed over the window specified in the
+// calling parameter when window.Show() is called.
+// The window is used to review and change logging parameters such as the logging level.
+func newSDRLoggerSettingsWindow() *loggingWindow {
+	loggingWin = &loggingWindow{}
 	loggingLevelLabel := widget.NewLabel("SDR Logging Level:")
 	loggingLevelSelect = widget.NewSelect([]string{"Fatal", "Critical", "Error", "Warning", "Notice", "Info", "Debug",
 		"Trace", "SSI"}, nil)
 	loggingLevelSelect.SetSelectedIndex(int(atomic.LoadInt64(&settings.JsdrSettings.LoggingLevel) - 1))
 	container := container.NewGridWithColumns(2, loggingLevelLabel, loggingLevelSelect,
 		widget.NewButton("Reset", resetLoggingValues), widget.NewButton("Accept", acceptChanges))
-	loggingPopUp.popUp = widget.NewModalPopUp(container, (*win).Canvas())
-	return loggingPopUp.popUp
+
+	loggingWin.window = SdrApp.NewWindow("Logging Settings")
+	loggingWin.window.SetContent(container)
+	loggingWin.window.SetOnClosed(closeLoggingWindow)
+	return loggingWin
 }
 
 // acceptChanges processes clicks on the "Accept" button.
@@ -47,7 +51,7 @@ func acceptChanges() {
 	atomic.StoreInt64(&settings.JsdrSettings.LoggingLevel, level)
 	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("acceptChanges - set logging level to %v",
 		soapylogging.LoggingLevelAsString(sdrlogger.SDRLogLevel(level))))
-	loggingPopUp.closeLoggingPopUp()
+	loggingWin.window.Close()
 }
 
 // resetLoggingValues resets the loggingFileName entry and the loggingLevelSelect to the values in JsdrSettings.
@@ -57,7 +61,8 @@ func resetLoggingValues() {
 		loggingLevelSelect.Selected))
 }
 
-// closeLoggingPopUp closes the logging popup window.
-func (modPopUp *modalPopUp) closeLoggingPopUp() {
-	modPopUp.popUp.Hide()
+// closeLoggingWindow closes the logging window.
+func closeLoggingWindow() {
+	loggingWin = nil
+	enableMainToolbar()
 }
