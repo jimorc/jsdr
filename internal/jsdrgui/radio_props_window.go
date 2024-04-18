@@ -63,7 +63,7 @@ func radioAcceptChanges() {
 		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
 		settings.JsdrSettings.Sdr = radioSelect.Selected
 	}
-	radioWindow.window.Close()
+	actionWin.window.Close()
 }
 
 // resetRadioValues resets the radio entry.
@@ -75,8 +75,8 @@ func rescanRadioValues() {
 
 // closeRadioWindow closes the radio window.
 func closeRadioWindow() {
-	radioWindow = nil
-	enableMainToolbar()
+	actionWin = nil
+
 }
 
 // radioSelected retrieves SDR properties for display when an SDR is selected.
@@ -89,17 +89,15 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	devs, err := device.MakeList(deviceArgs)
 	if err != nil {
 		sdrlogger.Logf(sdrlogger.Error, "Error retrieving the selected SDR: %v", err)
-		radioWin.window.Hide()
 		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
 			radioWin.window)
 	}
 	if len(devs) > 1 {
 		sdrlogger.Logf(sdrlogger.Error, fmt.Sprintf("More than one SDR retrieved for the selected SDR: %v", deviceArgs[0]["label"]))
-		radioWin.window.Hide()
 		dialog.ShowInformation("Multiple SDRs Found",
 			"More than one SDR retrieved for the selected item.\nSee documentation for information about how SDRs are "+
 				"distinguished.\nIf this does not explain the problem,\nfile a bug report and include the contents of the jsdr.log file.",
-			radioWin.window)
+			actionWin.window)
 	}
 
 }

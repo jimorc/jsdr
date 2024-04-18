@@ -21,17 +21,3 @@ func newMainToolbar(mainWin *fyne.Window) *widget.Toolbar {
 	mainToolbar = widget.NewToolbar(radioAction.action, startStop, loggingAction.action)
 	return mainToolbar
 }
-
-// disableMainToolbar disables each of the toolbar items in the toolbar.
-// This function should be called whenever a window is displayed over the main window.
-func disableMainToolbar() {
-	radioAction.disable()
-	loggingAction.disable()
-}
-
-// enableMainToolbar enables each of the toolbar items in the toolbar.
-// This function should be called whenever a window that is displayed over the main window is closed.
-func enableMainToolbar() {
-	radioAction.enable()
-	loggingAction.enable()
-}

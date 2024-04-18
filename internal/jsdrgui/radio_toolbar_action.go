@@ -26,25 +26,12 @@ func newRadioToolbarAction(win *fyne.Window) *radioToolbarAction {
 // radioToolbarActionActivated handles mouse clicks on the radio toolbar item.
 func (radioAction *radioToolbarAction) radioToolbarActionActivated() {
 	// The following test is a temporary fix to disable the Radio toolbaraction until fyne issue #2306 is closed.
-	if radioAction.disabled {
-		if radioWindow != nil {
-			radioWindow.window.Show()
-		}
+	if actionWin != nil {
+		actionWin.window.Show()
 		return
 	}
 
 	// action not disabled and no radio window exists, so create and show it.
-	radioWindow = newRadioWindow(radioAction.parentWindow)
-	radioWindow.window.Show()
-	disableMainToolbar()
-}
-
-// disable disables the radio toolbar action. This is used to prevent diaplaying multiple windows on top of the main window.
-func (radioAction *radioToolbarAction) disable() {
-	radioAction.disabled = true
-}
-
-// enable enables the radio toolbar action.
-func (radioAction *radioToolbarAction) enable() {
-	radioAction.disabled = false
+	actionWin = newRadioWindow(radioAction.parentWindow)
+	actionWin.window.Show()
 }
