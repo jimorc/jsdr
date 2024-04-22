@@ -3,6 +3,7 @@ package jsdrgui
 import (
 	"fmt"
 	"internal/settings"
+	"internal/soapydevice"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -82,22 +83,19 @@ func closeRadioWindow() {
 // radioSelected retrieves SDR properties for display when an SDR is selected.
 func (radioWin *actionWindow) radioSelected(sdr string) {
 	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
-	deviceArgs := make([]map[string]string, 1)
-	deviceArgs[0] = map[string]string{
+	deviceArgs := make(map[string]string, 1)
+	deviceArgs = map[string]string{
 		"label": sdr,
 	}
-	devs, err := device.MakeList(deviceArgs)
-	if err != nil {
-		sdrlogger.Logf(sdrlogger.Error, "Error retrieving the selected SDR: %v", err)
-		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
-			radioWin.window)
-	}
-	if len(devs) > 1 {
-		sdrlogger.Logf(sdrlogger.Error, fmt.Sprintf("More than one SDR retrieved for the selected SDR: %v", deviceArgs[0]["label"]))
-		dialog.ShowInformation("Multiple SDRs Found",
-			"More than one SDR retrieved for the selected item.\nSee documentation for information about how SDRs are "+
-				"distinguished.\nIf this does not explain the problem,\nfile a bug report and include the contents of the jsdr.log file.",
-			actionWin.window)
+
+	if soapydevice.Radio != nil {
+		soapydevice.Radio.Unmake()
 	}
 
+	dev, err := soapydevice.Make(deviceArgs)
+	if err != nil {
+		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
+			radioWindow.window)
+	}
+	soapydevice.Radio = dev
 }

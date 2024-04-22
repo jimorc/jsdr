@@ -6,6 +6,7 @@ require (
 	github.com/pothosware/go-soapy-sdr v0.7.4
 	internal/jsdrgui v1.0.0
 	internal/settings v1.0.0
+	internal/soapylogging v1.0.0
 )
 
 require (
@@ -16,7 +17,7 @@ require (
 
 require (
 	internal/gui v1.0.0 // indirect
-	internal/soapylogging v1.0.0
+	internal/soapydevice v1.0.0 // indirect
 )
 
 require (
@@ -57,3 +58,5 @@ replace internal/gui => ./internal/gui
 replace internal/jsdrgui => ./internal/jsdrgui
 
 replace internal/settings => ./internal/settings
+
+replace internal/soapydevice => ./internal/soapydevice

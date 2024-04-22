@@ -3,6 +3,7 @@ package jsdrgui
 import (
 	"fmt"
 	"internal/settings"
+	"internal/soapydevice"
 
 	"fyne.io/fyne/v2"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
@@ -30,5 +31,8 @@ func mainWindowClosing() {
 		sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("Settings saved to %v", settings.SettingsFileName))
 	} else {
 		sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Unable to save settings file: %v\n    %v", settings.SettingsFileName, err))
+	}
+	if soapydevice.Radio != nil {
+		soapydevice.Radio.Unmake()
 	}
 }
