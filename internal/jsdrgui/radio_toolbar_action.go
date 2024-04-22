@@ -29,5 +29,7 @@ func (radioAction *radioToolbarAction) radioToolbarActionActivated() {
 
 	// action not disabled and no radio window exists, so create and show it.
 	actionWin = newRadioWindow(radioAction.parentWindow)
-	actionWin.window.Show()
+	if actionWin != nil {
+		actionWin.window.Show()
+	}
 }
