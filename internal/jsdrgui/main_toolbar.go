@@ -9,6 +9,10 @@ type actionWindow struct {
 	window fyne.Window
 }
 
+// actionWin contains the window that is created by any of the toolbar actions.
+// This variable is used to ensure that only one action window is displayed at a time.
+// This is used to disable the toolbar actions.
+// TODO: When fyne supports disabling the toolbar or toolbar actions, this code could be replaced.
 var actionWin *actionWindow = nil
 
 var mainToolbar *widget.Toolbar = nil
