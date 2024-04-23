@@ -23,19 +23,21 @@ var Radio *Device = nil
 //
 // Returns a pointer to the new Device struct or nil on error
 func Make(args map[string]string) (*Device, error) {
+	sdrlogger.Logf(sdrlogger.Trace, "Making device based on args: %v", args)
 	dev, err := device.Make(args)
-	if err != nil {
-		sdrlogger.Logf(sdrlogger.Error, "Error making a Soapy Device: %v", err)
-		return nil, err
+	if err == nil {
+		newDevice := Device{sdrDevice: dev}
+		return &newDevice, nil
 	}
-	newDevice := Device{sdrDevice: dev}
-	return &newDevice, nil
+	sdrlogger.Logf(sdrlogger.Error, "Could not make device. Error: %v", err)
+	return nil, err
 }
 
 // Unmake releases the device handle associated with the SDR device.
 //
 // Returns nil, or the error if the request fails.
 func (dev *Device) Unmake() error {
+	sdrlogger.Log(sdrlogger.Trace, "Trying to unmake device")
 	err := dev.sdrDevice.Unmake()
 	if err != nil {
 		sdrlogger.Logf(sdrlogger.Error, "Error unmaking a Soapy Device: %v", err)
