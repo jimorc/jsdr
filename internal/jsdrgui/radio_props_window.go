@@ -18,6 +18,7 @@ type radioEntry struct {
 }
 
 var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
+var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
 
 // radioWin is the window containing the radio settings.
 var radioWindow *actionWindow = nil
@@ -31,7 +32,8 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	radioWindow = &actionWindow{}
 	radioWindow.window = SdrApp.NewWindow("Radio Properties")
 	radioLabel := widget.NewLabel("Radio")
-	container := container.NewGridWithColumns(2, radioLabel, radioSelect,
+	sampleRateLabel := widget.NewLabel("A/D Sample Rate:")
+	container := container.NewGridWithColumns(2, radioLabel, radioSelect, sampleRateLabel, sampleRates,
 		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
 	radioWindow.window.SetContent(container)
 	radioWindow.window.SetOnClosed(closeRadioWindow)
@@ -98,4 +100,10 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 			radioWindow.window)
 	}
 	soapydevice.Radio = dev
+	soapydevice.Radio.GetSampleRateRange()
+	sampleRates.SetOptions(soapydevice.Radio.SampleRates)
+}
+
+func (radioWin *actionWindow) sampleRateSelected(rate string) {
+	sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
 }
