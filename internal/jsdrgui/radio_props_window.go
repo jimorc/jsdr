@@ -8,6 +8,8 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
@@ -20,6 +22,8 @@ type radioEntry struct {
 var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
 var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
 
+var layoutWidth float32 = 450.0
+
 // radioWin is the window containing the radio settings.
 var radioWindow *actionWindow = nil
 
@@ -31,12 +35,29 @@ var radioWindow *actionWindow = nil
 func newRadioWindow(parent *fyne.Window) *actionWindow {
 	radioWindow = &actionWindow{}
 	radioWindow.window = SdrApp.NewWindow("Radio Properties")
-	radioLabel := widget.NewLabel("Radio")
+	radioLabel := widget.NewLabel("Radio:")
+	radioLabel.Alignment = fyne.TextAlignTrailing
 	sampleRateLabel := widget.NewLabel("A/D Sample Rate:")
-	container := container.NewGridWithColumns(2, radioLabel, radioSelect, sampleRateLabel, sampleRates,
-		widget.NewButton("Rescan", rescanRadioValues), widget.NewButton("Accept", radioAcceptChanges))
-	radioWindow.window.SetContent(container)
+	sampleRateLabel.Alignment = fyne.TextAlignTrailing
+	formContainer := &fyne.Container{
+		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates},
+	}
+	layout := layout.NewFormLayout()
+	layout.Layout(formContainer.Objects, fyne.NewSize(layoutWidth, 150))
+
+	accept := widget.NewButton("Accept", radioAcceptChanges)
+	cancel := widget.NewButton("Cancel", radioCancelChanges)
+
+	buttonBar := container.NewHBox()
+	buttonBar.Add(cancel)
+	buttonBar.Add(accept)
+	buttonBox := container.NewBorder(nil, nil, nil, buttonBar)
+
+	cont := container.NewBorder(formContainer, buttonBox, nil, nil)
+	radioWindow.window.SetContent(cont)
 	radioWindow.window.SetOnClosed(closeRadioWindow)
+
+	radioWindow.window.Resize(fyne.NewSize(layoutWidth+3*theme.Padding(), 250))
 
 	radios := device.Enumerate(nil)
 	if len(radios) == 0 {
@@ -66,6 +87,10 @@ func radioAcceptChanges() {
 		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
 		settings.JsdrSettings.Sdr = radioSelect.Selected
 	}
+	actionWin.window.Close()
+}
+
+func radioCancelChanges() {
 	actionWin.window.Close()
 }
 
