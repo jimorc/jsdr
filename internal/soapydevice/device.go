@@ -33,7 +33,7 @@ type Device struct {
 	sdrDevice       *device.SDRDevice
 	SampleRates     []string
 	sampleRate      string
-	antennas        []string
+	Antennas        []string
 	selectedAntenna string
 }
 
@@ -93,9 +93,23 @@ func (dev *Device) GetSampleRateRange() {
 	dev.SampleRates = rates
 }
 
-// GetListOfAntennas gets a list of available receive antennas.
+// GetListOfAntennas gets a list of available receive antennas for receive channel 0.
 //
 // Sets the antennas field of the Device to the list of available antennas.
 func (dev *Device) GetListOfAntennas() {
-	dev.antennas = dev.sdrDevice.ListAntennas(device.DirectionRX, 0)
+	dev.Antennas = dev.sdrDevice.ListAntennas(device.DirectionRX, 0)
+}
+
+// SetAntenna sets the named antenna for the SDR receive channel 0.
+//
+// Params:
+//   - antennaName: the name of the antenna to set
+//
+// Returns an error or nil in case of success.
+func (dev *Device) SetAntenna(antennaName string) error {
+	err := dev.sdrDevice.SetAntennas(device.DirectionRX, 0, antennaName)
+	if err != nil {
+		sdrlogger.Logf(sdrlogger.Error, "Error attempting to set antenna %v: %v", antennaName, err)
+	}
+	return err
 }

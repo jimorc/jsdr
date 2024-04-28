@@ -21,6 +21,7 @@ type radioEntry struct {
 
 var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
 var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
+var antennaSelect = widget.NewSelect([]string{""}, radioWindow.antennaSelected)
 
 var layoutWidth float32 = 450.0
 
@@ -39,8 +40,11 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	radioLabel.Alignment = fyne.TextAlignTrailing
 	sampleRateLabel := widget.NewLabel("A/D Sample Rate:")
 	sampleRateLabel.Alignment = fyne.TextAlignTrailing
+	antennaLabel := widget.NewLabel("Antenna:")
+	antennaLabel.Alignment = fyne.TextAlignTrailing
+
 	formContainer := &fyne.Container{
-		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates},
+		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect},
 	}
 	layout := layout.NewFormLayout()
 	layout.Layout(formContainer.Objects, fyne.NewSize(layoutWidth, 150))
@@ -127,8 +131,23 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	soapydevice.Radio = dev
 	soapydevice.Radio.GetSampleRateRange()
 	sampleRates.SetOptions(soapydevice.Radio.SampleRates)
+
+	soapydevice.Radio.GetListOfAntennas()
+	antennaSelect.SetOptions(soapydevice.Radio.Antennas)
+	if len(soapydevice.Radio.Antennas) == 1 {
+		antennaSelect.SetSelectedIndex(0)
+	}
 }
 
 func (radioWin *actionWindow) sampleRateSelected(rate string) {
 	sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
+}
+
+func (radioWin *actionWindow) antennaSelected(antenna string) {
+	if err := soapydevice.Radio.SetAntenna(antenna); err != nil {
+		dialog.ShowInformation("Set Antenna Error",
+			fmt.Sprintf("Could not set antenna: %v\n%v\nCheck the SDR and possibly select a different antenna.", antenna, err),
+			radioWin.window)
+	}
+	sdrlogger.Logf(sdrlogger.Trace, "Antenna %v selected", antenna)
 }
