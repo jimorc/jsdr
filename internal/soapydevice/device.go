@@ -113,3 +113,17 @@ func (dev *Device) SetAntenna(antennaName string) error {
 	}
 	return err
 }
+
+// SetSampleRate sets the specified sample rate for SDR receive channel 0.
+//
+// Params:
+//   - rate: the sample rate to set.
+//
+// Returns an error or nil on success.
+func (dev *Device) SetSampleRate(rate float64) error {
+	err := dev.sdrDevice.SetSampleRate(device.DirectionRX, 0, rate)
+	if err != nil {
+		sdrlogger.Logf(sdrlogger.Error, "Error attempting to set sample rate to %v: %v", rate, err)
+	}
+	return err
+}

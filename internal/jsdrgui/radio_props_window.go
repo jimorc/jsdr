@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"internal/settings"
 	"internal/soapydevice"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -140,7 +141,21 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 }
 
 func (radioWin *actionWindow) sampleRateSelected(rate string) {
-	sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
+	fRate, err := strconv.ParseFloat(rate, 64)
+	if err != nil {
+		dialog.ShowInformation("Sample Rate Error",
+			fmt.Sprintf(
+				"Problem occurred attempting to convert sample rate:%v to a float value:\n"+
+					"%v\nDepending on the reported error, you might be able to select a different sample rate\n"+
+					"If error continues, terminate program and file an issue at https://github.com/jimorc/jsdr/issues"+
+					"\nYou will need github account to do so.", rate, err), radioWin.window)
+		return
+	}
+	if err := soapydevice.Radio.SetSampleRate(fRate); err != nil {
+		dialog.ShowInformation("Sample Rate Error", fmt.Sprintf("Error encountered attempting to set sample rate %v:", fRate),
+			radioWin.window)
+		sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
+	}
 }
 
 func (radioWin *actionWindow) antennaSelected(antenna string) {
@@ -148,6 +163,7 @@ func (radioWin *actionWindow) antennaSelected(antenna string) {
 		dialog.ShowInformation("Set Antenna Error",
 			fmt.Sprintf("Could not set antenna: %v\n%v\nCheck the SDR and possibly select a different antenna.", antenna, err),
 			radioWin.window)
+		return
 	}
 	sdrlogger.Logf(sdrlogger.Trace, "Antenna %v selected", antenna)
 }
