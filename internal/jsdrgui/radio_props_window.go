@@ -19,9 +19,12 @@ type radioEntry struct {
 	entry *widget.Entry
 }
 
+var samplingModeSettings []string
+
 var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
 var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
 var antennaSelect = widget.NewSelect([]string{""}, radioWindow.antennaSelected)
+var samplingModeSelect = widget.NewSelect([]string{""}, radioWindow.samplingModeSelected)
 
 var layoutWidth float32 = 450.0
 
@@ -42,9 +45,11 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	sampleRateLabel.Alignment = fyne.TextAlignTrailing
 	antennaLabel := widget.NewLabel("Antenna:")
 	antennaLabel.Alignment = fyne.TextAlignTrailing
+	samplingModeLabel := widget.NewLabel("Sampling Mode:")
 
 	formContainer := &fyne.Container{
-		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect},
+		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect,
+			samplingModeLabel, samplingModeSelect},
 	}
 	layout := layout.NewFormLayout()
 	layout.Layout(formContainer.Objects, fyne.NewSize(layoutWidth, 150))
@@ -137,6 +142,10 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	if len(soapydevice.Radio.Antennas) == 1 {
 		antennaSelect.SetSelectedIndex(0)
 	}
+
+	samplingNames := soapydevice.Radio.GetSamplingModeNames()
+	samplingModeSelect.SetOptions(samplingNames)
+
 }
 
 func (radioWin *actionWindow) sampleRateSelected(rate string) {
@@ -155,4 +164,8 @@ func (radioWin *actionWindow) antennaSelected(antenna string) {
 		return
 	}
 	sdrlogger.Logf(sdrlogger.Trace, "Antenna %v selected", antenna)
+}
+
+func (radioWin *actionWindow) samplingModeSelected(mode string) {
+	sdrlogger.Logf(sdrlogger.Trace, "Sampling mode %v selected", mode)
 }
