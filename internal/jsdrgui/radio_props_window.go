@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"internal/settings"
 	"internal/soapydevice"
-	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -141,18 +140,8 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 }
 
 func (radioWin *actionWindow) sampleRateSelected(rate string) {
-	fRate, err := strconv.ParseFloat(rate, 64)
-	if err != nil {
-		dialog.ShowInformation("Sample Rate Error",
-			fmt.Sprintf(
-				"Problem occurred attempting to convert sample rate:%v to a float value:\n"+
-					"%v\nDepending on the reported error, you might be able to select a different sample rate\n"+
-					"If error continues, terminate program and file an issue at https://github.com/jimorc/jsdr/issues"+
-					"\nYou will need github account to do so.", rate, err), radioWin.window)
-		return
-	}
-	if err := soapydevice.Radio.SetSampleRate(fRate); err != nil {
-		dialog.ShowInformation("Sample Rate Error", fmt.Sprintf("Error encountered attempting to set sample rate %v:", fRate),
+	if err := soapydevice.Radio.SetSampleRate(rate); err != nil {
+		dialog.ShowInformation("Sample Rate Error", fmt.Sprintf("Error encountered attempting to set sample rate %v:", rate),
 			radioWin.window)
 		sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
 	}

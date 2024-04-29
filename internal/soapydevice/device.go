@@ -1,6 +1,8 @@
 package soapydevice
 
 import (
+	"errors"
+
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
@@ -120,8 +122,19 @@ func (dev *Device) SetAntenna(antennaName string) error {
 //   - rate: the sample rate to set.
 //
 // Returns an error or nil on success.
-func (dev *Device) SetSampleRate(rate float64) error {
-	err := dev.sdrDevice.SetSampleRate(device.DirectionRX, 0, rate)
+func (dev *Device) SetSampleRate(rate string) error {
+	var floatRate float64 = 0.0
+	for _, rateValue := range sampleRatesMap {
+		if rateValue.value == rate {
+			floatRate = rateValue.rate
+			break
+		}
+	}
+	if floatRate == 0.0 {
+		sdrlogger.Logf(sdrlogger.Error, "There is no matching sample rate for %v", rate)
+		return errors.New("Programming or Logic Error: no matching sample rate for selected value")
+	}
+	err := dev.sdrDevice.SetSampleRate(device.DirectionRX, 0, floatRate)
 	if err != nil {
 		sdrlogger.Logf(sdrlogger.Error, "Error attempting to set sample rate to %v: %v", rate, err)
 	}
