@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"internal/settings"
 	"internal/soapydevice"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -46,6 +47,7 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	antennaLabel := widget.NewLabel("Antenna:")
 	antennaLabel.Alignment = fyne.TextAlignTrailing
 	samplingModeLabel := widget.NewLabel("Sampling Mode:")
+	samplingModeLabel.Alignment = fyne.TextAlignTrailing
 
 	formContainer := &fyne.Container{
 		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect,
@@ -143,8 +145,10 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 		antennaSelect.SetSelectedIndex(0)
 	}
 
-	samplingNames := soapydevice.Radio.GetSamplingModeNames()
+	setValue, samplingNames := soapydevice.Radio.GetSamplingModeNames()
 	samplingModeSelect.SetOptions(samplingNames)
+	index, err := strconv.ParseInt(setValue, 10, 32)
+	samplingModeSelect.SetSelectedIndex(int(index))
 
 }
 

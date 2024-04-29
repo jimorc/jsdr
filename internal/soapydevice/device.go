@@ -145,15 +145,16 @@ func (dev *Device) SetSampleRate(rate string) error {
 //
 // Returns a string array of the names, which are SDR-type specific. For example, RTL-SDR dongles, the values:
 // ["Off", "I-ADC", "Q-ADC"] is returned.
-func (dev *Device) GetSamplingModeNames() []string {
+func (dev *Device) GetSamplingModeNames() (string, []string) {
 	settings := dev.sdrDevice.GetSettingInfo()
 	sdrlogger.Logf(sdrlogger.Trace, "Settings retrieved = %v", settings)
 	for _, setting := range settings {
 		if setting.Key == "direct_samp" {
 			sdrlogger.Logf(sdrlogger.Trace, "Sampling mode names: %v", setting.OptionNames)
-			return setting.OptionNames
+			sdrlogger.Logf(sdrlogger.Trace, "Sampling mode value retrieved: %v", setting.Value)
+			return setting.Value, setting.OptionNames
 		}
 	}
 	sdrlogger.Log(sdrlogger.Error, "No sampling mode names found")
-	return []string{}
+	return "", []string{}
 }
