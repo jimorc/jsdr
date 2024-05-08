@@ -21,7 +21,13 @@ are called from gosdr code.
 ## Icons
 
 <table>
-<tr><th>Icon</th><th>License</th><th>Atrtribution</th><th>Comments</th></tr>
+<tr><th>Icon</th><th>License</th><th>Attribution</th><th>Comments</th></tr>
+<tr>
+<td> <img src="cmd/jsdr/images/black-wrench.svg" width=50px height=50px> </td>
+<td> Free to use. </td>
+<td> Designed by Freepik - freepik.com </td>
+<td>  </td>
+</tr>
 <tr>
 <td> <img src="cmd/jsdr/images/settings.svg" width=50px height=50px> </td>
 <td> Free for commercial or personal use </td>

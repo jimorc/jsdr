@@ -13,7 +13,7 @@ type radioToolbarAction struct {
 
 // newRadioToolbarAction creates a RadioToolbarAction widget.
 func newRadioToolbarAction(win *fyne.Window) *radioToolbarAction {
-	radioIcon := canvas.NewImageFromResource(resourceRadioSvg).Resource
+	radioIcon := canvas.NewImageFromResource(resourceBlackWrenchSvg).Resource
 	radioAction := &radioToolbarAction{parentWindow: win}
 	radioAction.action = widget.NewToolbarAction(radioIcon, radioAction.radioToolbarActionActivated)
 	return radioAction

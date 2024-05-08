@@ -9,6 +9,7 @@ import (
 	"sync/atomic"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/theme"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
@@ -31,6 +32,8 @@ func main() {
 	} else {
 		sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Unable to load settings file: %v\n    %v", settings.SettingsFileName, err))
 	}
+
+	jsdrgui.SdrApp.Settings().SetTheme(theme.LightTheme())
 	// Create and show program GUI
 	mainWindow := jsdrgui.NewMainWindow(jsdrgui.SdrApp)
 	mainWindow.Resize(fyne.NewSize(800, 300))
