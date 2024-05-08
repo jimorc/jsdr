@@ -8,6 +8,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
@@ -16,7 +17,7 @@ import (
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
-type radioEntry struct {
+type ppmCorrection struct {
 	entry *widget.Entry
 }
 
@@ -26,6 +27,10 @@ var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
 var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
 var antennaSelect = widget.NewSelect([]string{""}, radioWindow.antennaSelected)
 var samplingModeSelect = widget.NewSelect([]string{""}, radioWindow.samplingModeSelected)
+
+var frequencyCorrection = &ppmCorrection{}
+var ppm = binding.NewInt()
+var ppmCorr = binding.IntToString(ppm)
 
 var layoutWidth float32 = 450.0
 
@@ -48,10 +53,13 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	antennaLabel.Alignment = fyne.TextAlignTrailing
 	samplingModeLabel := widget.NewLabel("Sampling Mode:")
 	samplingModeLabel.Alignment = fyne.TextAlignTrailing
+	frequencyCorrectionLabel := widget.NewLabel("PPM Correction:")
+	frequencyCorrectionLabel.Alignment = fyne.TextAlignTrailing
+	frequencyCorrection.entry = widget.NewEntryWithData(ppmCorr)
 
 	formContainer := &fyne.Container{
 		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect,
-			samplingModeLabel, samplingModeSelect},
+			samplingModeLabel, samplingModeSelect, frequencyCorrectionLabel, frequencyCorrection.entry},
 	}
 	layout := layout.NewFormLayout()
 	layout.Layout(formContainer.Objects, fyne.NewSize(layoutWidth, 150))
@@ -97,6 +105,15 @@ func radioAcceptChanges() {
 	if radioSelect.Selected != settings.JsdrSettings.Sdr {
 		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
 		settings.JsdrSettings.Sdr = radioSelect.Selected
+	}
+	if frequencyCorrection.entry.Validate() != nil {
+		corr := frequencyCorrection.entry.Text
+		sdrlogger.Log(sdrlogger.Error, fmt.Sprintf("Invalid frequencyCorrection value: '%v' when Accept button pressed"+
+			" in Hardware dialog", corr))
+		dialog.ShowInformation("Invalid PPM", "Invalid PPM Correction.\nMust be an integer value.\n"+
+			"Either correct the value and click 'Accept' again,\nor click 'Cancel",
+			actionWin.window)
+		return
 	}
 	actionWin.window.Close()
 }
@@ -150,6 +167,12 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	index, err := strconv.ParseInt(setValue, 10, 32)
 	samplingModeSelect.SetSelectedIndex(int(index))
 
+	frequencyComponents := soapydevice.Radio.ListFrequencies()
+	for _, component := range frequencyComponents {
+		if component == "CORR" {
+			ppm.Set(int(soapydevice.Radio.GetFrequencyCorrection()))
+		}
+	}
 }
 
 func (radioWin *actionWindow) sampleRateSelected(rate string) {

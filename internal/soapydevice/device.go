@@ -158,3 +158,19 @@ func (dev *Device) GetSamplingModeNames() (string, []string) {
 	sdrlogger.Log(sdrlogger.Error, "No sampling mode names found")
 	return "", []string{}
 }
+
+// ListFrequencies lists available tunable elements in the chain.
+//
+// Elements are listed in order from RF to baseband.
+//
+// Returns a list of tunable elements by name
+func (dev *Device) ListFrequencies() []string {
+	return dev.sdrDevice.ListFrequencies(device.DirectionRX, 0)
+}
+
+// GetFrequencyCorrection retrieves the frequency correction.
+//
+// Returns the frequency correction in PPM.
+func (dev *Device) GetFrequencyCorrection() float64 {
+	return float64(dev.sdrDevice.GetFrequencyComponent(device.DirectionRX, 0, "CORR"))
+}
