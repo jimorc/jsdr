@@ -23,10 +23,10 @@ type ppmCorrection struct {
 
 var samplingModeSettings []string
 
-var radioSelect = widget.NewSelect([]string{""}, radioWindow.radioSelected)
-var sampleRates = widget.NewSelect([]string{""}, radioWindow.sampleRateSelected)
-var antennaSelect = widget.NewSelect([]string{""}, radioWindow.antennaSelected)
-var samplingModeSelect = widget.NewSelect([]string{""}, radioWindow.samplingModeSelected)
+var sourceSelect = widget.NewSelect([]string{""}, sourceSelected)
+var sampleRates = widget.NewSelect([]string{""}, sampleRateSelected)
+var antennaSelect = widget.NewSelect([]string{""}, antennaSelected)
+var samplingModeSelect = widget.NewSelect([]string{""}, samplingModeSelected)
 
 var frequencyCorrection = &ppmCorrection{}
 var ppm = binding.NewInt()
@@ -34,19 +34,16 @@ var ppmCorr = binding.IntToString(ppm)
 
 var layoutWidth float32 = 450.0
 
-// radioWin is the window containing the radio settings.
-var radioWindow *actionWindow = nil
-
-// newRadioWindow creates the radio popup window
-// The return value is a pointer to the radioWindow struct. The window is displayed over the window specified in the
+// newSourceWindow creates the source popup window
+// The return value is a pointer to the sourceWindow struct. The window is displayed over the window specified in the
 // calling parameter when window.Show() is called.
-// The window is used to select an SDR device and some of its parameters.
+// The window is used to select an SDR device or other source and some of its parameters.
 // If there are no SDRs attached to the computer, an information message is displayed, and nil is returned
-func newRadioWindow(parent *fyne.Window) *actionWindow {
-	radioWindow = &actionWindow{}
-	radioWindow.window = SdrApp.NewWindow("Radio Properties")
-	radioLabel := widget.NewLabel("Radio:")
-	radioLabel.Alignment = fyne.TextAlignTrailing
+func newSourceWindow(parent *fyne.Window) *actionWindow {
+	sourceWindow := &actionWindow{}
+	sourceWindow.window = SdrApp.NewWindow("Source Properties")
+	sourceLabel := widget.NewLabel("Source:")
+	sourceLabel.Alignment = fyne.TextAlignTrailing
 	sampleRateLabel := widget.NewLabel("A/D Sample Rate:")
 	sampleRateLabel.Alignment = fyne.TextAlignTrailing
 	antennaLabel := widget.NewLabel("Antenna:")
@@ -58,14 +55,14 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	frequencyCorrection.entry = widget.NewEntryWithData(ppmCorr)
 
 	formContainer := &fyne.Container{
-		Objects: []fyne.CanvasObject{radioLabel, radioSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect,
+		Objects: []fyne.CanvasObject{sourceLabel, sourceSelect, sampleRateLabel, sampleRates, antennaLabel, antennaSelect,
 			samplingModeLabel, samplingModeSelect, frequencyCorrectionLabel, frequencyCorrection.entry},
 	}
 	layout := layout.NewFormLayout()
 	layout.Layout(formContainer.Objects, fyne.NewSize(layoutWidth, 150))
 
-	accept := widget.NewButton("Accept", radioAcceptChanges)
-	cancel := widget.NewButton("Cancel", radioCancelChanges)
+	accept := widget.NewButton("Accept", sourceAcceptChanges)
+	cancel := widget.NewButton("Cancel", sourceCancelChanges)
 
 	buttonBar := container.NewHBox()
 	buttonBar.Add(cancel)
@@ -73,10 +70,10 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 	buttonBox := container.NewBorder(nil, nil, nil, buttonBar)
 
 	cont := container.NewBorder(formContainer, buttonBox, nil, nil)
-	radioWindow.window.SetContent(cont)
-	radioWindow.window.SetOnClosed(closeRadioWindow)
+	sourceWindow.window.SetContent(cont)
+	sourceWindow.window.SetOnClosed(closeSourceWindow)
 
-	radioWindow.window.Resize(fyne.NewSize(layoutWidth+3*theme.Padding(), 250))
+	sourceWindow.window.Resize(fyne.NewSize(layoutWidth+3*theme.Padding(), 250))
 
 	radios := device.Enumerate(nil)
 	if len(radios) == 0 {
@@ -90,21 +87,21 @@ func newRadioWindow(parent *fyne.Window) *actionWindow {
 		sdrlogger.Logf(sdrlogger.Trace, "Found SDR: %v", radio["label"])
 		labels = append(labels, radio["label"])
 	}
-	radioSelect.SetOptions(labels)
+	sourceSelect.SetOptions(labels)
 	if len(radios) == 1 {
-		radioSelect.SetSelectedIndex(0)
+		sourceSelect.SetSelectedIndex(0)
 	} else if len(settings.JsdrSettings.Sdr) > 0 {
-		radioSelect.SetSelected(settings.JsdrSettings.Sdr)
+		sourceSelect.SetSelected(settings.JsdrSettings.Sdr)
 	}
-	return radioWindow
+	return sourceWindow
 }
 
-// acceptChanges processes clicks on the "Accept" button.
-func radioAcceptChanges() {
+// sourceAcceptChanges processes clicks on the "Accept" button.
+func sourceAcceptChanges() {
 	sdrlogger.Log(sdrlogger.Trace, "In radioAcceptChanges")
-	if radioSelect.Selected != settings.JsdrSettings.Sdr {
-		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", radioSelect.Selected))
-		settings.JsdrSettings.Sdr = radioSelect.Selected
+	if sourceSelect.Selected != settings.JsdrSettings.Sdr {
+		sdrlogger.Logf(sdrlogger.Trace, fmt.Sprintf("JsdrSettings.Sdr set to %v", sourceSelect.Selected))
+		settings.JsdrSettings.Sdr = sourceSelect.Selected
 	}
 	if frequencyCorrection.entry.Validate() != nil {
 		corr := frequencyCorrection.entry.Text
@@ -118,25 +115,25 @@ func radioAcceptChanges() {
 	actionWin.window.Close()
 }
 
-func radioCancelChanges() {
+func sourceCancelChanges() {
 	actionWin.window.Close()
 }
 
-// resetRadioValues resets the radio entry.
-func rescanRadioValues() {
-	radioSelect.SetSelectedIndex(0)
+// resetSourceValues resets the source entry to the first source.
+func resetSourceValues() {
+	sourceSelect.SetSelectedIndex(0)
 	sdrlogger.Log(sdrlogger.Trace, fmt.Sprintf("Radio set to: %v",
-		radioSelect.Selected))
+		sourceSelect.Selected))
 }
 
-// closeRadioWindow closes the radio window.
-func closeRadioWindow() {
+// closeSourceWindow closes the source window.
+func closeSourceWindow() {
 	actionWin = nil
 
 }
 
-// radioSelected retrieves SDR properties for display when an SDR is selected.
-func (radioWin *actionWindow) radioSelected(sdr string) {
+// sourceSelected retrieves SDR properties for display when an SDR is selected.
+func sourceSelected(sdr string) {
 	sdrlogger.Logf(sdrlogger.Trace, "SDR: %v selected", sdr)
 	deviceArgs := make(map[string]string, 1)
 	deviceArgs = map[string]string{
@@ -150,7 +147,7 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	dev, err := soapydevice.Make(deviceArgs)
 	if err != nil {
 		dialog.ShowInformation("SDR Not Found", fmt.Sprintf("An error has occurred.\nCannnot access the selected SDR:\n%v", err),
-			radioWindow.window)
+			actionWin.window)
 	}
 	soapydevice.Radio = dev
 	soapydevice.Radio.GetSampleRateRange()
@@ -175,24 +172,24 @@ func (radioWin *actionWindow) radioSelected(sdr string) {
 	}
 }
 
-func (radioWin *actionWindow) sampleRateSelected(rate string) {
+func sampleRateSelected(rate string) {
 	if err := soapydevice.Radio.SetSampleRate(rate); err != nil {
 		dialog.ShowInformation("Sample Rate Error", fmt.Sprintf("Error encountered attempting to set sample rate %v:", rate),
-			radioWin.window)
+			actionWin.window)
 		sdrlogger.Logf(sdrlogger.Trace, "Sample rate of %v selected", rate)
 	}
 }
 
-func (radioWin *actionWindow) antennaSelected(antenna string) {
+func antennaSelected(antenna string) {
 	if err := soapydevice.Radio.SetAntenna(antenna); err != nil {
 		dialog.ShowInformation("Set Antenna Error",
 			fmt.Sprintf("Could not set antenna: %v\n%v\nCheck the SDR and possibly select a different antenna.", antenna, err),
-			radioWin.window)
+			actionWin.window)
 		return
 	}
 	sdrlogger.Logf(sdrlogger.Trace, "Antenna %v selected", antenna)
 }
 
-func (radioWin *actionWindow) samplingModeSelected(mode string) {
+func samplingModeSelected(mode string) {
 	sdrlogger.Logf(sdrlogger.Trace, "Sampling mode %v selected", mode)
 }
